@@ -24,25 +24,6 @@ while [[ $# -gt 0 ]];do
         esac
 done
 
-function ShowUsage {
-# param 1: procent
-# param 2: bar length
-
-    # process data
-    let _bar_width=$2
-    let _done=(${_bar_width}*${1}/100)
-    let _progress=$1
-    let _left=${_bar_width}-${_done}
-    # build progressbar string lengths
-    _fill=$(printf "%${_done}s")
-    _empty=$(printf "%${_left}s")
-
-    # build progressbar strings and print the progressbar line
-    # output example:                           
-    # [######----------] 40%
-    printf "[${_fill// /#}${_empty// /-}] ${_progress}%%"
-}
-
 if [ ${HELP} ]; then
 printf "%s"  "
 Usage: diskinfo [PARAMETERS]
@@ -54,8 +35,8 @@ optional parameters:
                         list of strings, separatet by a space (not case sensitive)
                         example: -e \"shm overlay tmpfs devtmpfs\"
 -b, --bar-length        length of progressbar
-                        default: 16
-                        example: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 16) 
+                        default: 15
+                        example: [######---------] 40% 
                     
 created by gi8lino (2018)
 
@@ -72,12 +53,31 @@ fi
 if [ "${BARLENGTH}" ]; then
     re='^[0-9]+$'
     if ! [[ ${BARLENGTH} =~ $re ]] ; then
-        printf "bar length is not a number. set progressbar length to default (16)!"
+        printf "bar length is not a number. set progressbar length to default (15)!"
     fi
 else
     # size of progress bars
-    BARLENGTH=16
+    BARLENGTH=15
 fi
+
+function ShowUsage {
+# param 1: procent
+# param 2: bar length
+
+    # process data
+    let _bar_width=$2
+    let _done=(${_bar_width}*${1}/100)
+    let _progress=$1
+    let _left=${_bar_width}-${_done}
+    # build progressbar string lengths
+    _fill=$(printf "%${_done}s")
+    _empty=$(printf "%${_left}s")
+
+    # build progressbar strings and print the progressbar line
+    # output example:                           
+    # [--------------------] 2%
+    printf "[${_fill// /#}${_empty// /-}] ${_progress}%%"
+}
 
 shopt -s nocasematch  # set string compare to not case senstive
 
