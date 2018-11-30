@@ -54,8 +54,8 @@ optional parameters:
                         list of strings, separatet by a space (not case sensitive)
                         example: -e \"shm overlay tmpfs devtmpfs\"
 -b, --bar-length        length of progressbar
-                        default: 15
-                        example: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 15) 
+                        default: 16
+                        example: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 16) 
                     
 created by gi8lino (2018)
 
@@ -72,11 +72,11 @@ fi
 if [ "${BARLENGTH}" ]; then
     re='^[0-9]+$'
     if ! [[ ${BARLENGTH} =~ $re ]] ; then
-        printf "bar length is not a number. set progressbar length to default (15)!"
+        printf "bar length is not a number. set progressbar length to default (16)!"
     fi
 else
     # size of progress bars
-    BARLENGTH=15
+    BARLENGTH=16
 fi
 
 shopt -s nocasematch  # set string compare to not case senstive
