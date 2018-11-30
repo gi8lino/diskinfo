@@ -33,12 +33,11 @@ exclude any filesystem types you want by setting the param -e|--excluded-types
 optional parameters:
 -e, --excluded-types    types of filesystem to hide 
                         list of strings, separatet by a space
-                        example: "overlay tmpfs shm filesystem"
+                        example: 'overlay tmpfs shm filesystem'
 -b, --bar-length        length of progressbar
                         default: 15
-                        example: [#############--]
-                        
-                        
+                        example: [######---------] 40% 
+                    
 createdy by gi8 (2018)
 "
     exit 0
@@ -82,10 +81,10 @@ function ProgressBar {
 shopt -s nocasematch  # set string compare to not case senstive
 
 # output title
-SPACES=5
+SPACES=8
 BARWIDTH=$((BARLENGTH + SPACES))
 
-printf "%-22s%-7s%-7s%-7s%-${BARWIDTH}s%-s\n" "mounted on" "size" "used" "free" "usage" "filesystem"
+printf "%-22s%7s%7s%7s%-${BARWIDTH}s%-s\n" "mounted on" "size" "used" "free" "usage" "filesystem"
 
 # output disk usage
 while IFS=' ', read -r -a input; do
@@ -97,7 +96,7 @@ while IFS=' ', read -r -a input; do
     mounted="${input[5]}"
  
     if [[ ! " ${unwanted[@]} " =~ " ${filesystem} " ]] && [ ${filesystem} != "Filesystem" ]; then
-        printf "%-22s%5s%6s%6s%12s%s\n" ${mounted} ${size} ${used} ${avail} "$(ProgressBar ${use::-1} ${BARLENGTH})" ${filesystem}
+        printf "%-22s%7s%7s%7s%-${BARWIDTH}s%-30s\n" ${mounted} ${size} ${used} ${avail} "$(ProgressBar ${use::-1} ${BARLENGTH})" ${filesystem}
     fi
 
 done <<< "$(df -h)"
