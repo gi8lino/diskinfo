@@ -38,7 +38,7 @@ optional parameters:
                         default: 15
                         example: [######---------] 40% 
                     
-createdy by gi8 (2018)
+created by gi8 (2018)
 
 "
     exit 0
