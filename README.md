@@ -10,4 +10,10 @@ exclude any filesystem types you want by setting the param -e|--excluded-types
                           example: [######---------] 40%
 
 ## alias
+for easier use add following alias:
+open bash:
+`vi ~/.bashrc`
+set command:
 `alias di="/opt/diskinfo/diskinfo.sh -e 'shm overlay tmpfs devtmpfs'"`
+reload bash:
+. ~/.bashrc
