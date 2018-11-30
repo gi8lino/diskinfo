@@ -60,7 +60,7 @@ else
     BARLENGTH=15
 fi
 
-function ProgressBar {
+function ShowUsage {
 # param 1: procent
 # param 2: bar length
 
@@ -97,7 +97,7 @@ while IFS=' ', read -r -a input; do
     mounted="${input[5]}"
  
     if [[ ! " ${unwanted[@]} " =~ " ${filesystem} " ]] && [ ${filesystem} != "Filesystem" ]; then
-        printf "%-22s%8s%8s%8s%3s%-${BARWIDTH}s%-30s\n" ${mounted} ${size} ${used} ${avail} " " "$(ProgressBar ${use::-1} ${BARLENGTH})" ${filesystem}
+        printf "%-22s%8s%8s%8s%3s%-${BARWIDTH}s%-30s\n" ${mounted} ${size} ${used} ${avail} " " "$(ShowUsage ${use::-1} ${BARLENGTH})" ${filesystem}
     fi
 
 done <<< "$(df -h)"
