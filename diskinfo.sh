@@ -39,7 +39,7 @@ function ShowUsage {
 
     # build progressbar strings and print the progressbar line
     # output example:                           
-    # [--------------------] 2%
+    # [######----------] 40%
     printf "[${_fill// /#}${_empty// /-}] ${_progress}%%"
 }
 
