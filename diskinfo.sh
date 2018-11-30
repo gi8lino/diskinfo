@@ -101,5 +101,4 @@ while IFS=' ', read -r -a input; do
 
 done <<< "$(df -h)"
 
-echo "finito"
 
