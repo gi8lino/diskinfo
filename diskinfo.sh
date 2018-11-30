@@ -25,20 +25,21 @@ while [[ $# -gt 0 ]];do
 done
 
 if [ ${HELP} ]; then
-printf "
+printf "%s"  "
 Usage: diskinfo [PARAMETERS]
-show diskinfo (di -h) with a progressbar for disk usage. you can
+show diskinfo (df -h) with a progressbar for disk usage. you can
 exclude any filesystem types you want by setting the param -e|--excluded-types
 
 optional parameters:
 -e, --excluded-types    types of filesystem to hide 
                         list of strings, separatet by a space
-                        example: 'overlay tmpfs shm filesystem'
+                        example: -e 'shm overlay tmpfs devtmpfs'
 -b, --bar-length        length of progressbar
                         default: 15
                         example: [######---------] 40% 
                     
 createdy by gi8 (2018)
+
 "
     exit 0
 fi
