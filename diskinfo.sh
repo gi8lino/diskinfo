@@ -24,42 +24,6 @@ while [[ $# -gt 0 ]];do
         esac
 done
 
-if [ ${HELP} ]; then
-printf "%s"  "
-Usage: diskinfo [PARAMETERS]
-show diskinfo (df -h) with a progressbar for disk usage. you can
-exclude any filesystem types you want by setting the param -e|--excluded-types
-
-optional parameters:
--e, --excluded-types    types of filesystem to hide 
-                        list of strings, separatet by a space (not case sensitive)
-                        example: -e \"shm overlay tmpfs devtmpfs\"
--b, --bar-length        length of progressbar
-                        default: 15
-                        example: [######---------] 40% 
-                    
-created by gi8lino (2018)
-
-"
-    exit 0
-fi
-
-# load config
-if [ "${EXCLUDES}" ]; then
-    #read -a unwanted <<< ${EXCLUDES}
-    unwanted=${EXCLUDES}
-fi
-
-if [ "${BARLENGTH}" ]; then
-    re='^[0-9]+$'
-    if ! [[ ${BARLENGTH} =~ $re ]] ; then
-        printf "bar length is not a number. set progressbar length to default (15)!"
-    fi
-else
-    # size of progress bars
-    BARLENGTH=15
-fi
-
 function ShowUsage {
 # param 1: procent
 # param 2: bar length
@@ -78,6 +42,42 @@ function ShowUsage {
     # [--------------------] 2%
     printf "[${_fill// /#}${_empty// /-}] ${_progress}%%"
 }
+
+if [ ${HELP} ]; then
+printf "%s"  "
+Usage: diskinfo [PARAMETERS]
+show diskinfo (df -h) with a progressbar for disk usage. you can
+exclude any filesystem types you want by setting the param -e|--excluded-types
+
+optional parameters:
+-e, --excluded-types    types of filesystem to hide 
+                        list of strings, separatet by a space (not case sensitive)
+                        example: -e \"shm overlay tmpfs devtmpfs\"
+-b, --bar-length        length of progressbar
+                        default: 20
+                        example: "$(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 20)" 
+                    
+created by gi8lino (2018)
+
+"
+    exit 0
+fi
+
+# load config
+if [ "${EXCLUDES}" ]; then
+    #read -a unwanted <<< ${EXCLUDES}
+    unwanted=${EXCLUDES}
+fi
+
+if [ "${BARLENGTH}" ]; then
+    re='^[0-9]+$'
+    if ! [[ ${BARLENGTH} =~ $re ]] ; then
+        printf "bar length is not a number. set progressbar length to default (20)!"
+    fi
+else
+    # size of progress bars
+    BARLENGTH=20
+fi
 
 shopt -s nocasematch  # set string compare to not case senstive
 
