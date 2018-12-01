@@ -39,16 +39,15 @@ function ShowUsage {
 
     # build progressbar strings and print the progressbar line
     # output example:                           
-    # [--------------------] 2%
+    # [##########-----] 73%
     printf "[${_fill// /#}${_empty// /-}]"
-    #printf "[${_fill// /#}${_empty// /-}] ${_progress}%%"
 }
 
 if [ ${HELP} ]; then
-printf "%s"  "
-Usage: diskinfo [PARAMETERS]
+printf "%s"  "Usage: diskinfo [PARAMETERS]
 show diskinfo (df -h) with a progressbar for disk usage. you can
 exclude any filesystem types you want by setting the param -e|--excluded-types
+following a list of filesystem types. set the list between quotes
 
 optional parameters:
 -e, --excluded-types    types of filesystem to hide 
@@ -64,19 +63,15 @@ created by gi8lino (2018)
     exit 0
 fi
 
-# load config
+# check param exclude
 if [ "${EXCLUDES}" ]; then
-    #read -a unwanted <<< ${EXCLUDES}
     unwanted=${EXCLUDES}
 fi
 
-if [ "${BARLENGTH}" ]; then
-    re='^[0-9]+$'
-    if ! [[ ${BARLENGTH} =~ $re ]] ; then
-        printf "bar length is not a number. set progressbar length to default (20)!"
-    fi
-else
-    # size of progress bars
+
+# check if param was sat and is a number
+re='^[0-9]+$'
+if [ !  "${BARLENGTH}" ] || [[ ! ${BARLENGTH} =~ $re ]]; then
     BARLENGTH=20
 fi
 
