@@ -40,7 +40,8 @@ function ShowUsage {
     # build progressbar strings and print the progressbar line
     # output example:                           
     # [--------------------] 2%
-    printf "[${_fill// /#}${_empty// /-}] ${_progress}%%"
+    printf "[${_fill// /#}${_empty// /-}]"
+    #printf "[${_fill// /#}${_empty// /-}] ${_progress}%%"
 }
 
 if [ ${HELP} ]; then
@@ -82,11 +83,11 @@ fi
 shopt -s nocasematch  # set string compare to not case senstive
 
 # output title
-SPACES=8
+SPACES=4
 BARWIDTH=$((BARLENGTH + SPACES))
 
-printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%2s%-s\n" "mounted on" "size" "used" "free" " " "usage" " " "filesystem"
-
+#printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%2s%-s\n" "mounted on" "size" "used" "free" " " "usage" " " "filesystem"
+printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%7s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"
 
 # output disk usage
 while IFS=' ', read -r -a input; do
@@ -98,7 +99,7 @@ while IFS=' ', read -r -a input; do
     mounted="${input[5]}"
  
     if [[ ! " ${unwanted[@]} " =~ " ${filesystem} " ]] && [ ${filesystem} != "Filesystem" ]; then
-        printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%2s%-s\n" ${mounted} ${size} ${used} ${avail} " " "$(ShowUsage ${use::-1} ${BARLENGTH})" " " ${filesystem}
+        printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} " " "$(ShowUsage ${use::-1} ${BARLENGTH})" ${use} "" ${filesystem}
     fi
 
 done <<< "$(df -h)"
