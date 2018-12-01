@@ -86,7 +86,6 @@ shopt -s nocasematch  # set string compare to not case senstive
 SPACES=4
 BARWIDTH=$((BARLENGTH + SPACES))
 
-#printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%2s%-s\n" "mounted on" "size" "used" "free" " " "usage" " " "filesystem"
 printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%7s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"
 
 # output disk usage
