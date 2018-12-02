@@ -83,6 +83,7 @@ BARWIDTH=$((BARLENGTH + SPACES))
 
 printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%7s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"
 
+skip=true
 # output disk usage
 while IFS=' ', read -r -a input; do
     filesystem="${input[0]}"
@@ -91,8 +92,15 @@ while IFS=' ', read -r -a input; do
     avail="${input[3]}"
     use="${input[4]}"
     mounted="${input[5]}"
- 
-    if [[ ! " ${unwanted[@]} " =~ " ${filesystem} " ]] && [ ${filesystem} != "Filesystem" ]; then
+
+    # skip first line 
+    if [ ${skip} == true ];then
+        skip=false
+        continue
+    fi
+
+    # check if filesystem is in unwanted list
+    if  [[ ! " ${unwanted[@]} " =~ " ${filesystem} " ]];then
         printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} " " "$(ShowUsage ${use::-1} ${BARLENGTH})" ${use} "" ${filesystem}
     fi
 
