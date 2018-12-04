@@ -6,7 +6,10 @@ the actual disk usage next to the progressbar will not be rounded.
 
 ## optional parameters
 * `-e, --excluded-types` - types of filesystem to hide. list of strings, separatet by a space. example: `-e "shm overlay tmpfs devtmpfs"`
-* `-b, --bar-length` - length of the progressbar. default: 15. example: [######---------] 40%
+* `-b, --bar-length` - length of the progressbar. default: 120. example: [######---------] 40%
+* `-h, --help` - show help dialog
+* `-v, --version` - show version
+
 
 ## alias
 for easier use add following alias:<br>
