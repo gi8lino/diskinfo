@@ -33,27 +33,25 @@ while [[ $# -gt 0 ]];do
       esac  # end case
 done
 
-function ShowUsage {
+function ProgressBar {
   # param 1: procent (int)
   # param 2: bar length (int)
-
+    _percent=$1
+    _barlength=$2
+  
     _fillchar="#"  # "▇"
     _emptychar="-"
     
-    (( _rounded = ($1+2)/5, _rounded *= 5))  # round to the next five percent (old way)
+    (( _rounded = (${_percent}+2)/5, _rounded *= 5))  # round to the next five percent
     
-    # procedd data
-    let _bar_width=$2
-    let _done=(_bar_width*_rounded/100)
-    let _progress=${_rounded}
-    let _left=(_bar_width-_done)
+    let _done=(_barlength*_rounded/100)  # done in relation to bar length
+    let _left=(_barlength-_done)  # rest
+    
     # build progressbar string lengths
     _fill=$(printf "%${_done}s")
     _empty=$(printf "%${_left}s")
 
-    # build progressbar strings and print the progressbar line
-    # example: [##########-----]
-    printf "[${_fill// /${_fillchar}}${_empty// /${_emptychar}}]"
+    printf "[${_fill// /${_fillchar}}${_empty// /${_emptychar}}]"  # show progressbar: [########------------]
 }
 
 if [ ${HELP} ]; then
@@ -70,7 +68,7 @@ optional parameters:
                         example: -e \"shm overlay tmpfs devtmpfs\"
 -b, --bar-length        length of progressbar
                         default: 20
-                        example: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 20)
+                        example: $(ProgressBar $(( ( RANDOM % 100 )  + 1 )) 20)
 -h, --help              show this dialog
 -v, --version           show version
                     
@@ -111,7 +109,7 @@ while IFS=' ', read -a input; do
     
     # check if filesystem is in unwanted list
     if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then  
-      printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
+      printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ProgressBar ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
     fi
 
 done <<< "$(df -h)"
