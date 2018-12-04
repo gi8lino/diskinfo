@@ -17,12 +17,14 @@ open bash: `vi ~/.bashrc`<br>
 set command: `alias di="/opt/diskinfo/diskinfo.sh -e 'shm overlay tmpfs devtmpfs'"`<br>
 reload bash: `. ~/.bashrc`
 
-type di
+type in console: `di`<br>
 result:<br>
+```
 mounted on                size    used    free    usage                         filesystem
 /                          20G    1.8G     19G    [##------------------]  9%    /dev/mapper/centos-root
 /boot                    1014M    198M    817M    [####----------------] 20%    /dev/sdd2
 /boot/efi                 200M    9.8M    191M    [#-------------------]  5%    /dev/sdd1
-/mnt/hd01                 1.5T      1T    500G    [#######-------------] 33%    /dev/sda1
+/mnt/hd01                 1.5T      1T    500G    [#############-------] 66%    /dev/sda1
 /home                      10G     53M     10G    [--------------------]  1%    /dev/mapper/centos-home
+```
 
