@@ -85,7 +85,7 @@ fi
 re="^[0-9]+$"  # regex: only numbers
 [ ! "${BARLENGTH}" ] || [[ ! ${BARLENGTH} =~ ${re} ]] && BARLENGTH=20
 
-printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%10s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"  # output title
+printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%10s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"  # title
 
 skip=true  # to skip first line (header)
 # output disk usage
@@ -97,8 +97,7 @@ while IFS=' ', read -a input; do
     use="${input[4]}"
     mounted="${input[5]}"
 
-    # skip first line (header)
-    [ ${skip} == true ] && skip=false && continue
+    [ ${skip} == true ] && skip=false && continue  # skip first line (header)
 
     # check if filesystem is in unwanted list
     if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then
