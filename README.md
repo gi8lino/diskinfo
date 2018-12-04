@@ -1,5 +1,5 @@
 ## description
-show diskinfo (`df -h`) with a progressbar for disk usage. you can exclude any filesystem type you want by setting the param `-e|--excluded-types` following a list of filesystem types. set the list between quotes.<br>
+show diskinfo.sh (`df -h`) with a progressbar for disk usage. you can exclude any filesystem type you want by setting the param `-e|--excluded-types` following a list of filesystem types. set the list between quotes.<br>
 the progressbar will round up or down the progress to the next 5 percent.<br>
 the actual disk usage next to the progressbar will not be rounded.
 
