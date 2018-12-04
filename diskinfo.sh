@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 VERSION="1.03"
 VERSIONDATE="2018-12-04"
@@ -73,8 +73,7 @@ optional parameters:
 -v, --version           show version
                     
 created by gi8lino (2018)
-"
-    exit 0
+"; exit 0
 fi
 
 if [ ${SHOWVERSION} ];then
@@ -82,14 +81,11 @@ if [ ${SHOWVERSION} ];then
     exit 0
 fi
 
-# check if param was sat and is a number
-re="^[0-9]+$"
-if [ ! "${BARLENGTH}" ] || [[ ! ${BARLENGTH} =~ ${re} ]];then
-    BARLENGTH=20
-fi
+# if barlength is not set or barlength value is not a number, set barlength to 20
+re="^[0-9]+$"  # regex: only numbers
+[ ! "${BARLENGTH}" ] || [[ ! ${BARLENGTH} =~ ${re} ]] && BARLENGTH=20
 
-# output title
-printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%10s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"
+printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%10s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"  # output title
 
 skip=true  # to skip first line (header)
 # output disk usage
@@ -100,16 +96,14 @@ while IFS=' ', read -a input; do
     avail="${input[3]}"
     use="${input[4]}"
     mounted="${input[5]}"
-    
-    # skip first line (header)
-    if [ ${skip} == true ];then
-        skip=false
-        continue
-    fi
-    # check if filesystem is in unwanted list
-    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then  
-      printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ProgressBar ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
-    fi
 
+    # skip first line (header)
+    [ ${skip} == true ] && skip=false && continue
+
+    # check if filesystem is in unwanted list
+    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then
+        printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ProgressBar ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
+    fi
 done <<< "$(df -h)"
+
 exit 0
