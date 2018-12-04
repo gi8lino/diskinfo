@@ -29,8 +29,7 @@ function ShowUsage {
 # param 2: bar length
 
     # process data
-    _rounded=$1
-    (( _rounded = (_rounded+2)/5, _rounded *= 5))
+    (( _rounded = ($1+2)/5, _rounded *= 5))  # round to the next five percent 
     let _bar_width=$2
     let _done=(${_bar_width}*${_rounded}/100)
     let _progress=${_rounded}
@@ -48,8 +47,10 @@ function ShowUsage {
 if [ ${HELP} ]; then
 printf "%s"  "Usage: diskinfo [PARAMETERS]
 show diskinfo (df -h) with a progressbar for disk usage. you can
-exclude any filesystem types you want by setting the param -e|--excluded-types
-following a list of filesystem types. set the list between quotes
+exclude any filesystem type you want by setting the param -e|--excluded-types
+following a list of filesystem types. set the list between quotes.
+the progressbar will round up or down the progress to the next 5 percent. 
+the actual diskusage next to the progressbar will not be rounded.
 
 optional parameters:
 -e, --excluded-types    types of filesystem to hide 
