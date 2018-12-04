@@ -50,7 +50,7 @@ function ShowUsage {
 }
 
 if [ ${HELP} ]; then
-printf "%s"  "Usage: diskinfo [PARAMETERS]
+printf "%s"  "usage: $(basename $BASH_SOURCE) [PARAMETERS]
 show diskinfo (df -h) with a progressbar for disk usage. you can
 exclude any filesystem type you want by setting the param -e|--excluded-types
 following a list of filesystem types. set the list between quotes.
