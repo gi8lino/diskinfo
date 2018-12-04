@@ -6,7 +6,7 @@ the actual disk usage next to the progressbar will not be rounded.
 
 ## optional parameters
 * `-e, --excluded-types` - types of filesystem to hide. list of strings, separatet by a space. example: `-e "shm overlay tmpfs devtmpfs"`
-* `-b, --bar-length` - length of the progressbar. default: 120. example: [######---------] 40%
+* `-b, --bar-length` - length of the progressbar. default: 20. example: [#######-------------] 33%
 * `-h, --help` - show help dialog
 * `-v, --version` - show version
 
@@ -25,4 +25,5 @@ mounted on                size    used    free    usage                         
 /boot/efi                 200M    9.8M    191M    [#-------------------]  5%    /dev/sdd1
 /mnt/hd01                 1.5T      1T    500G    [#######-------------] 33%    /dev/sda1
 /home                      10G     53M     10G    [--------------------]  1%    /dev/mapper/centos-home
+
 
