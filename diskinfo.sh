@@ -29,9 +29,11 @@ function ShowUsage {
 # param 2: bar length
 
     # process data
+    _rounded=$1
+    (( _rounded = (_rounded+2)/5, _rounded *= 5))
     let _bar_width=$2
-    let _done=(${_bar_width}*${1}/100)
-    let _progress=$1
+    let _done=(${_bar_width}*${_rounded}/100)
+    let _progress=${_rounded}
     let _left=${_bar_width}-${_done}
     # build progressbar string lengths
     _fill=$(printf "%${_done}s")
