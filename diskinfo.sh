@@ -1,9 +1,12 @@
 #!/bin/bash
 
+VERSION="1.02"
+VERSIONDATE="2018-12-04"
+
 # read start parameter
 while [[ $# -gt 0 ]];do
-         key="$1"
-         case $key in
+    key="$1"
+      case $key in
         -e|--excluded-types)
         EXCLUDES="$2"
         shift # past argument
@@ -14,19 +17,19 @@ while [[ $# -gt 0 ]];do
         shift # past argument
         shift # past value
         ;;
-        -?|--help)
+        -?|-h|--help)
         HELP=TRUE
         shift # past argument
         ;;
         *)    # unknown option
         shift # past argument
         ;;
-        esac
+      esac  # end case
 done
 
 function ShowUsage {
-# param 1: procent
-# param 2: bar length
+  # param 1: procent (int)
+  # param 2: bar length (int)
 
     #(( _rounded = ($1+2)/5, _rounded *= 5))  # round to the next five percent (old way)
     
@@ -50,7 +53,7 @@ function ShowUsage {
 }
 
 if [ ${HELP} ]; then
-printf "%s"  "usage: $(basename $BASH_SOURCE) [PARAMETERS]
+    printf "%s"  "usage: $(basename $BASH_SOURCE) [PARAMETERS]
 show diskinfo (df -h) with a progressbar for disk usage. you can
 exclude any filesystem type you want by setting the param -e|--excluded-types
 following a list of filesystem types. set the list between quotes.
@@ -66,34 +69,33 @@ optional parameters:
                         example: "$(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 20)" 
                     
 created by gi8lino (2018)
+version: ${VERSION} (${VERSIONDATE})
 
 "
     exit 0
 fi
 
-# check param exclude
-if [ "${EXCLUDES}" ]; then
+# check param excludes
+if [ "${EXCLUDES}" ];then
     unwanted=${EXCLUDES}
 fi
 
-
 # check if param was sat and is a number
-re='^[0-9]+$'
-if [ !  "${BARLENGTH}" ] || [[ ! ${BARLENGTH} =~ $re ]]; then
+re="^[0-9]+$"
+if [ ! "${BARLENGTH}" ] || [[ ! ${BARLENGTH} =~ ${re} ]];then
     BARLENGTH=20
 fi
 
 shopt -s nocasematch  # set string compare to not case senstive
 
-# output title
-SPACES=4
-BARWIDTH=$((BARLENGTH + SPACES))
+let BARWIDTH=${BARLENGTH}+4  # add 4 column to bar
 
+# output title
 printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%7s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"
 
-skip=true
+skip=true  # to skip first line (header)
 # output disk usage
-while IFS=' ', read -r -a input; do
+while IFS=' ', read -a input; do
     filesystem="${input[0]}"
     size="${input[1]}"
     used="${input[2]}"
@@ -101,7 +103,7 @@ while IFS=' ', read -r -a input; do
     use="${input[4]}"
     mounted="${input[5]}"
 
-    # skip first line 
+    # skip first line (header)
     if [ ${skip} == true ];then
         skip=false
         continue
@@ -109,9 +111,9 @@ while IFS=' ', read -r -a input; do
 
     # check if filesystem is in unwanted list
     if  [[ ! " ${unwanted[@]} " =~ " ${filesystem} " ]];then
-        printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} " " "$(ShowUsage ${use::-1} ${BARLENGTH})" ${use} "" ${filesystem}
+        printf "%-22s%8s%8s%8s%4s%-${BARWIDTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH})" ${use} "" ${filesystem}
     fi
 
 done <<< "$(df -h)"
 
-
+exit 0
