@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="1.02"
+VERSION="1.03"
 VERSIONDATE="2018-12-04"
 
 shopt -s nocasematch  # set string compare to not case senstive
@@ -37,6 +37,9 @@ function ShowUsage {
   # param 1: procent (int)
   # param 2: bar length (int)
 
+    _fillchar="#"  # "▇"
+    _emptychar="-"
+    
     (( _rounded = ($1+2)/5, _rounded *= 5))  # round to the next five percent (old way)
     
     # procedd data
@@ -50,7 +53,7 @@ function ShowUsage {
 
     # build progressbar strings and print the progressbar line
     # example: [##########-----]
-    printf "[${_fill// /#}${_empty// /-}]"
+    printf "[${_fill// /${_fillchar}}${_empty// /${_emptychar}}]"
 }
 
 if [ ${HELP} ]; then
@@ -99,13 +102,13 @@ while IFS=' ', read -a input; do
     avail="${input[3]}"
     use="${input[4]}"
     mounted="${input[5]}"
-
+    
     # skip first line (header)
     if [ ${skip} == true ];then
         skip=false
         continue
     fi
-
+    
     # check if filesystem is in unwanted list
     if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then  
       printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
