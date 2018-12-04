@@ -3,6 +3,8 @@
 VERSION="1.02"
 VERSIONDATE="2018-12-04"
 
+shopt -s nocasematch  # set string compare to not case senstive
+
 # read start parameter
 while [[ $# -gt 0 ]];do
     key="$1"
@@ -47,13 +49,12 @@ function ShowUsage {
     _empty=$(printf "%${_left}s")
 
     # build progressbar strings and print the progressbar line
-    # output example:                           
-    # [##########-----] 73%
+    # example: [##########-----]
     printf "[${_fill// /#}${_empty// /-}]"
 }
 
 if [ ${HELP} ]; then
-    printf "%s"  "usage: $(basename $BASH_SOURCE) [PARAMETERS]
+    printf "%s\n"  "usage: $(basename $BASH_SOURCE) [PARAMETERS]
 show diskinfo (df -h) with a progressbar for disk usage. you can
 exclude any filesystem type you want by setting the param -e|--excluded-types
 following a list of filesystem types. set the list between quotes.
@@ -66,12 +67,11 @@ optional parameters:
                         example: -e \"shm overlay tmpfs devtmpfs\"
 -b, --bar-length        length of progressbar
                         default: 20
-                        example: "$(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 20)" 
+                        example: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 20)
 -h, --help              show this dialog
 -v, --version           show version
                     
 created by gi8lino (2018)
-
 "
     exit 0
 fi
@@ -81,18 +81,11 @@ if [ ${SHOWVERSION} ];then
     exit 0
 fi
 
-# check param excludes
-if [ "${EXCLUDES}" ];then
-    unwanted=${EXCLUDES}
-fi
-
 # check if param was sat and is a number
 re="^[0-9]+$"
 if [ ! "${BARLENGTH}" ] || [[ ! ${BARLENGTH} =~ ${re} ]];then
     BARLENGTH=20
 fi
-
-shopt -s nocasematch  # set string compare to not case senstive
 
 # output title
 printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%10s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"
@@ -114,8 +107,8 @@ while IFS=' ', read -a input; do
     fi
 
     # check if filesystem is in unwanted list
-    if  [[ ! " ${unwanted[@]} " =~ " ${filesystem} " ]];then
-        printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
+    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then  
+      printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
     fi
 
 done <<< "$(df -h)"
