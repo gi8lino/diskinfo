@@ -106,12 +106,10 @@ while IFS=' ', read -a input; do
         skip=false
         continue
     fi
-    
     # check if filesystem is in unwanted list
     if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then  
       printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ProgressBar ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
     fi
 
 done <<< "$(df -h)"
-
 exit 0
