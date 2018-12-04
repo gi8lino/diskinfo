@@ -55,7 +55,7 @@ show diskinfo (df -h) with a progressbar for disk usage. you can
 exclude any filesystem type you want by setting the param -e|--excluded-types
 following a list of filesystem types. set the list between quotes.
 the progressbar will round up or down the progress to the next 5 percent. 
-the actual diskusage next to the progressbar will not be rounded.
+the actual disk usage next to the progressbar will not be rounded.
 
 optional parameters:
 -e, --excluded-types    types of filesystem to hide 
