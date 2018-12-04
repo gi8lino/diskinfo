@@ -28,8 +28,13 @@ function ShowUsage {
 # param 1: procent
 # param 2: bar length
 
-    # process data
-    (( _rounded = ($1+2)/5, _rounded *= 5))  # round to the next five percent 
+    #(( _rounded = ($1+2)/5, _rounded *= 5))  # round to the next five percent (old way)
+    
+    # round up/down to the next five percent
+    let _rounded=($1+2)/5
+    let _rounded*=5
+
+    # procedd data
     let _bar_width=$2
     let _done=(${_bar_width}*${_rounded}/100)
     let _progress=${_rounded}
