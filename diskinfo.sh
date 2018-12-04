@@ -1,7 +1,6 @@
 #!/bin/sh
 
-VERSION="1.03"
-VERSIONDATE="2018-12-04"
+VERSION="1.04"
 
 shopt -s nocasematch  # set string compare to not case senstive
 
@@ -33,29 +32,23 @@ while [[ $# -gt 0 ]];do
       esac  # end case
 done
 
-function ProgressBar {
-  # param 1: procent (int)
-  # param 2: bar length (int)
+function ShowUsage {
     _percent=$1
     _barlength=$2
   
-    _fillchar="#"  # "▇"
-    _emptychar="-"
-    
     (( _rounded = (${_percent}+2)/5, _rounded *= 5))  # round to the next five percent
-    
-    let _done=(_barlength*_rounded/100)  # done in relation to bar length
-    let _left=(_barlength-_done)  # rest
+    let _used=(_barlength*_rounded/100)  # used in relation to bar length
+    let _free=(_barlength-_used)  # rest
     
     # build progressbar string lengths
-    _fill=$(printf "%${_done}s")
-    _empty=$(printf "%${_left}s")
+    _fill=$(printf "%${_used}s")
+    _empty=$(printf "%${_free}s")
 
-    printf "[${_fill// /${_fillchar}}${_empty// /${_emptychar}}]"  # show progressbar: [########------------]
+    printf "[${_fill// /#}${_empty// /-}]"  # show progressbar: [########------------]
 }
 
-if [ ${HELP} ]; then
-    printf "%s\n"  "usage: $(basename $BASH_SOURCE) [PARAMETERS]
+if [ ${HELP} ];then
+    printf "%s\n" "usage: $(basename $BASH_SOURCE) [PARAMETERS]
 show diskinfo (df -h) with a progressbar for disk usage. you can
 exclude any filesystem type you want by setting the param -e|--excluded-types
 following a list of filesystem types. set the list between quotes.
@@ -68,22 +61,21 @@ optional parameters:
                         example: -e \"shm overlay tmpfs devtmpfs\"
 -b, --bar-length        length of progressbar
                         default: 20
-                        example: $(ProgressBar $(( ( RANDOM % 100 )  + 1 )) 20)
+                        example: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 20)
 -h, --help              show this dialog
 -v, --version           show version
                     
 created by gi8lino (2018)
-"; exit 0
-fi
-
-if [ ${SHOWVERSION} ];then
-    printf "version: %s\n" "${VERSION} (${VERSIONDATE})"
+"
     exit 0
 fi
 
-# if barlength is not set or barlength value is not a number, set barlength to 20
-re="^[0-9]+$"  # regex: only numbers
-[ ! "${BARLENGTH}" ] || [[ ! ${BARLENGTH} =~ ${re} ]] && BARLENGTH=20
+if [ ${SHOWVERSION} ];then
+    printf "$(basename $BASH_SOURCE) version: %s\n" "${VERSION}"
+    exit 0
+fi
+
+[[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not a number, set barlength to 20
 
 printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%10s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"  # title
 
@@ -101,8 +93,9 @@ while IFS=' ', read -a input; do
 
     # check if filesystem is in unwanted list
     if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then
-        printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ProgressBar ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
+        printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
     fi
+    
 done <<< "$(df -h)"
 
 exit 0
