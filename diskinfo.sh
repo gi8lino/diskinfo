@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="1.04"
+VERSION="1.05"
 
 shopt -s nocasematch  # set string compare to not case senstive
 
