@@ -17,6 +17,10 @@ while [[ $# -gt 0 ]];do
         shift # past argument
         shift # past value
         ;;
+        -v|--version)
+        SHOWVERSION=TRUE
+        shift # past argument
+        ;;
         -?|-h|--help)
         HELP=TRUE
         shift # past argument
@@ -67,11 +71,17 @@ optional parameters:
 -b, --bar-length        length of progressbar
                         default: 20
                         example: "$(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 20)" 
+-h, --help              show this dialog
+-v, --version           show version
                     
 created by gi8lino (2018)
-version: ${VERSION} (${VERSIONDATE})
 
 "
+    exit 0
+fi
+
+if [ ${SHOWVERSION} ];then
+    printf "version: %s\n" "${VERSION} (${VERSIONDATE})"
     exit 0
 fi
 
