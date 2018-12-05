@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="1.07"
+VERSION="1.08"
 
 function ShowUsage {
     _percent=$1
@@ -11,21 +11,21 @@ function ShowUsage {
     let _free=(_barlength-_used)  # rest
     
     # progressbar string lengths
-    _fill=$(printf "%${_used}s")
-    _empty=$(printf "%${_free}s")
+    local _fill=$(printf "%${_used}s")
+    local _empty=$(printf "%${_free}s")
 
     printf "[${_fill// /#}${_empty// /-}]"  # show progressbar: [########------------]
 }
 
 function ShowHelp {
     printf "%s\n" \
-	       "Usage: $(basename $BASH_SOURCE) [[-e|--excluded-types "TYPES"] [-b|--bar-length INT]] | [-h|--help] | [-v|--version]]" \
+	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-h|--help] | [-v|--version]" \
 	       "" \
            "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
 	       "exclude any filesystem type you want by setting the parameter" \
 	       "'-e|--excluded-types', following a list of filesystem types. " \
-	       "Set the list between quotes." \
-	       "The progressbar will round up or down the progress to the next 5 percent." \
+	       "You have to set the list between quotes." \
+	       "The progressbar will round up/down the progress to the next 5 percent." \
 	       "The actual disk usage next to the progressbar will not be rounded." \
 	       "" \
 	       "Optional Parameters:" \
@@ -58,7 +58,7 @@ shopt -s nocasematch  # set string compare to not case senstive
 # read start parameter
 while [[ $# -gt 0 ]];do
     key="$1"
-      case $key in
+    case $key in
         -e|--excluded-types)
         EXCLUDES="$2"
         shift # past argument
@@ -72,16 +72,16 @@ while [[ $# -gt 0 ]];do
         -v|--version)
         ShowVersion
         ;;
-        -?|-h|--help)
+        -h|--help)
         ShowHelp
         ;;
         *)    # unknown option
-		ShowUnknownParam
+	    ShowUnknownParam
         ;;
-      esac  # end case
+    esac  # end case
 done
 
-[[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not a number, set barlength to 20
+[[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
 
 printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%10s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"  # title
 
@@ -97,7 +97,7 @@ while IFS=' ', read -a input; do
 
     [ ${skip} == true ] && skip=false && continue  # skip first line (header)
 
-    # check if filesystem is in unwanted list
+    # check if filesystem is in excluded list
     if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then
         printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
     fi
