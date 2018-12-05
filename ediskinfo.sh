@@ -47,26 +47,29 @@ function ShowUsage {
     printf "[${_fill// /#}${_empty// /-}]"  # show progressbar: [########------------]
 }
 
-if [ ${HELP} ];then
-    printf "%s\n" "usage: $(basename $BASH_SOURCE) [PARAMETERS]
-show diskinfo (df -h) with a progressbar for disk usage. you can
-exclude any filesystem type you want by setting the param -e|--excluded-types
-following a list of filesystem types. set the list between quotes.
-the progressbar will round up or down the progress to the next 5 percent. 
-the actual disk usage next to the progressbar will not be rounded.
 
-optional parameters:
--e, --excluded-types    types of filesystem to hide 
-                        list of strings, separatet by a space (not case sensitive)
-                        example: -e \"shm overlay tmpfs devtmpfs\"
--b, --bar-length        length of progressbar
-                        default: 20
-                        example: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 20)
--h, --help              show this dialog
--v, --version           show version
-                    
-created by gi8lino (2018)
-"
+if [ ${HELP} ];then
+    printf "%s\n" \
+	       "Usage: $(basename $BASH_SOURCE) [PARAMETER]..." \
+	       "" \
+           "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
+	       "exclude any filesystem type you want by setting the parameter" \
+	       "'-e|--excluded-types', following a list of filesystem types. " \
+	       "Set the list between quotes." \
+	       "The progressbar will round up or down the progress to the next 5 percent." \
+	       "The actual disk usage next to the progressbar will not be rounded." \
+	       "" \
+	       "Optional Parameters:" \
+	       "-e, --excluded-types    types of filesystem to hide" \
+	       "                        list of strings, separatet by a space (not case sensitive)" \
+	       "                        example: -e \"shm overlay tmpfs devtmpfs\"" \
+	       "-b, --bar-length        length of progressbar (default: 20)" \
+	       "                        example: -b 30" \
+	       "                        result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
+	       "-h, --help              display this help and exit" \
+	       "-v, --version           output version information and exit" \
+	       "" \
+	       "created by gi8lino (2018)"
     exit 0
 fi
 
