@@ -4,13 +4,13 @@ Show diskinfo (df -h) with a progressbar for disk usage. You can exclude any fil
 The actual disk usage next to the progressbar will not be rounded.<br>
 
 ### optional parameters:
-* `-e, --excluded-types` - types of filesystem to hide. list of strings, separatet by a space. example: `-e "shm overlay tmpfs devtmpfs"`
-* `-b, --bar-length` - length of the progressbar. default: 20. example: [#######-------------] 33%
-* `-h, --help` - show help dialog
-* `-v, --version` - show version
+* `-e, --excluded-types` - types of filesystem to hide. List of strings, separatet by a space. example: `-e "shm overlay tmpfs devtmpfs"`
+* `-b, --bar-length` - length of the progressbar. default: 20. Example: [#######-------------] 33%
+* `-h, --help` - display help and exit
+* `-v, --version` - output version information and exit
 
 ## usage
-`diskinfo.sh [[-e|--excluded-types "TYPE ..."] [-b|--bar-length INT]] | [-h|--help] | [-v|--version]]" `
+`diskinfo.sh [-e|--excluded-types "TYPE ..."] [-b|--bar-length INT]] | [-h|--help] | [-v|--version]"`
 
 ## alias
 for easier use add following alias:<br>
