@@ -3,8 +3,8 @@
 VERSION="1.08"
 
 function ShowUsage {
-    _percent=$1
-    _barlength=$2
+    local _percent=$1
+    local _barlength=$2
   
     (( _rounded = (${_percent}+2)/5, _rounded *= 5))  # round to the next five percent
     let _used=(_barlength*_rounded/100)  # used in relation to bar length
@@ -29,14 +29,14 @@ function ShowHelp {
 	       "The actual disk usage next to the progressbar will not be rounded." \
 	       "" \
 	       "Optional Parameters:" \
-	       "-e, --excluded-types    types of filesystem to hide" \
-	       "                        list of strings, separatet by a space (not case sensitive)" \
-	       "                        example: -e \"shm overlay tmpfs devtmpfs\"" \
-	       "-b, --bar-length        length of progressbar (default: 20)" \
-	       "                        example: -b 30" \
-	       "                        result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
-	       "-h, --help              display this help and exit" \
-	       "-v, --version           output version information and exit" \
+	       "-e, --excluded-types "[Type]..."    types of filesystem to hide" \
+	       "                                    list of strings, separatet by a space (not case sensitive)" \
+	       "                                    example: -e \"shm overlay tmpfs devtmpfs\"" \
+	       "-b, --bar-length [INT]              length of progressbar (default: 20)" \
+	       "                                    example: -b 30" \
+	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
+	       "-h, --help                          display this help and exit" \
+	       "-v, --version                       output version information and exit" \
 	       "" \
 	       "created by gi8lino (2018)"
     exit 0
