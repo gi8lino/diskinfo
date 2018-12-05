@@ -73,7 +73,7 @@ while [[ $# -gt 0 ]];do
         ShowVersion
         ;;
         -h|--help)
-        ShowHelp
+        ShowHelp "$1"
         ;;
         *)    # unknown option
 	    ShowUnknownParam
