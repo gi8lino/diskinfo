@@ -61,22 +61,22 @@ while [[ $# -gt 0 ]];do
     case $key in
         -e|--excluded-types)
         EXCLUDES="$2"
-        shift # past argument
-        shift # past value
+        shift  # past argument
+        shift  # past value
         ;;
         -b|--bar-length)
         BARLENGTH="$2"
-        shift # past argument
-        shift # past value
+        shift  # past argument
+        shift  # past value
         ;;
         -v|--version)
         ShowVersion
         ;;
         -h|--help)
-        ShowHelp "$1"
+        ShowHelp
         ;;
-        *)    # unknown option
-	    ShowUnknownParam
+        *)  # unknown option
+	    ShowUnknownParam "$1"
         ;;
     esac  # end case
 done
