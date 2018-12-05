@@ -1,15 +1,16 @@
 ## description
-show diskinfo.sh (`df -h`) with a progressbar for disk usage. you can exclude any filesystem type you want by setting the param `-e|--excluded-types` following a list of filesystem types. set the list between quotes.<br>
-the progressbar will round up or down the progress to the next 5 percent.<br>
-the actual disk usage next to the progressbar will not be rounded.
+Show diskinfo (df -h) with a progressbar for disk usage. You can exclude any filesystem type you want by setting the parameter <br>
+'-e|--excluded-types', following a list of filesystem types. Set the list between quotes. The progressbar will round up or down the progress to the next 5 percent.<br>
+The actual disk usage next to the progressbar will not be rounded.<br>
 
-
-## optional parameters
+### optional parameters:
 * `-e, --excluded-types` - types of filesystem to hide. list of strings, separatet by a space. example: `-e "shm overlay tmpfs devtmpfs"`
 * `-b, --bar-length` - length of the progressbar. default: 20. example: [#######-------------] 33%
 * `-h, --help` - show help dialog
 * `-v, --version` - show version
 
+## usage
+`diskinfo.sh [[-e|--excluded-types "TYPE ..."] [-b|--bar-length INT]] | [-h|--help] | [-v|--version]]" `
 
 ## alias
 for easier use add following alias:<br>
