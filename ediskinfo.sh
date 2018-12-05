@@ -47,7 +47,6 @@ function ShowUsage {
     printf "[${_fill// /#}${_empty// /-}]"  # show progressbar: [########------------]
 }
 
-
 if [ ${HELP} ];then
     printf "%s\n" \
 	       "Usage: $(basename $BASH_SOURCE) [PARAMETER]..." \
