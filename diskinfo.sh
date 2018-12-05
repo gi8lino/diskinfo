@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="1.08"
+VERSION="1.9"
 
 function ShowUsage {
     local _percent=$1
@@ -29,7 +29,7 @@ function ShowHelp {
 	       "The actual disk usage next to the progressbar will not be rounded." \
 	       "" \
 	       "Optional Parameters:" \
-	       "-e, --excluded-types "[Type]..."    types of filesystem to hide" \
+	       "-e, --excluded-types \"[Type] ...\"   types of filesystem to hide" \
 	       "                                    list of strings, separatet by a space (not case sensitive)" \
 	       "                                    example: -e \"shm overlay tmpfs devtmpfs\"" \
 	       "-b, --bar-length [INT]              length of progressbar (default: 20)" \
