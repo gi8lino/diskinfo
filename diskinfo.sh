@@ -1,36 +1,6 @@
 #!/bin/sh
 
-VERSION="1.06"
-
-shopt -s nocasematch  # set string compare to not case senstive
-
-# read start parameter
-while [[ $# -gt 0 ]];do
-    key="$1"
-      case $key in
-        -e|--excluded-types)
-        EXCLUDES="$2"
-        shift # past argument
-        shift # past value
-        ;;
-        -b|--bar-length)
-        BARLENGTH="$2"
-        shift # past argument
-        shift # past value
-        ;;
-        -v|--version)
-        SHOWVERSION=TRUE
-        shift # past argument
-        ;;
-        -?|-h|--help)
-        HELP=TRUE
-        shift # past argument
-        ;;
-        *)    # unknown option
-        shift # past argument
-        ;;
-      esac  # end case
-done
+VERSION="1.07"
 
 function ShowUsage {
     _percent=$1
@@ -40,16 +10,16 @@ function ShowUsage {
     let _used=(_barlength*_rounded/100)  # used in relation to bar length
     let _free=(_barlength-_used)  # rest
     
-    # build progressbar string lengths
+    # progressbar string lengths
     _fill=$(printf "%${_used}s")
     _empty=$(printf "%${_free}s")
 
     printf "[${_fill// /#}${_empty// /-}]"  # show progressbar: [########------------]
 }
 
-if [ ${HELP} ];then
+function ShowHelp {
     printf "%s\n" \
-	       "Usage: $(basename $BASH_SOURCE) [PARAMETER]..." \
+	       "Usage: $(basename $BASH_SOURCE) [[-e|--excluded-types "TYPES"] [-b|--bar-length INT]] | [-h|--help] | [-v|--version]]" \
 	       "" \
            "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
 	       "exclude any filesystem type you want by setting the parameter" \
@@ -70,12 +40,46 @@ if [ ${HELP} ];then
 	       "" \
 	       "created by gi8lino (2018)"
     exit 0
-fi
+}
 
-if [ ${SHOWVERSION} ];then
+function ShowVersion {
     printf "$(basename $BASH_SOURCE) version: %s\n" "${VERSION}"
     exit 0
-fi
+}
+
+function ShowUnknownParam {
+    printf "%s\n" \
+	       "$(basename $BASH_SOURCE): invalid option -- '$1'" \
+           "Try '$(basename $BASH_SOURCE) --help' for more information."
+    exit 1
+}
+
+shopt -s nocasematch  # set string compare to not case senstive
+# read start parameter
+while [[ $# -gt 0 ]];do
+    key="$1"
+      case $key in
+        -e|--excluded-types)
+        EXCLUDES="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -b|--bar-length)
+        BARLENGTH="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -v|--version)
+        ShowVersion
+        ;;
+        -?|-h|--help)
+        ShowHelp
+        ;;
+        *)    # unknown option
+		ShowUnknownParam
+        ;;
+      esac  # end case
+done
 
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not a number, set barlength to 20
 
