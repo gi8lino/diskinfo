@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="1.9"
+VERSION="2.0"
 
 function ShowUsage {
     local _percent=$1
