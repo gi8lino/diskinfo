@@ -21,7 +21,7 @@ function ShowHelp {
     printf "%s\n" \
 	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-h|--help] | [-v|--version]" \
 	       "" \
-           "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
+               "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
 	       "exclude any filesystem type you want by setting the parameter" \
 	       "'-e|--excluded-types', following a list of filesystem types. " \
 	       "You have to set the list between quotes." \
