@@ -10,7 +10,7 @@ The actual disk usage next to the progressbar will not be rounded.<br>
 * `-v, --version` - output version information and exit
 
 ## usage
-`diskinfo.sh [-e|--excluded-types "TYPE ..."] [-b|--bar-length INT] | [-h|--help] | [-v|--version]"`
+`diskinfo.sh [-e|--excluded-types "TYPE ..."] [-b|--bar-length INT] | [-h|--help] | [-v|--version]`
 
 ## alias
 for easier use add following alias:<br>
