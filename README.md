@@ -15,7 +15,8 @@ The actual disk usage next to the progressbar will not be rounded.<br>
 ## alias
 for easier use add following alias:<br>
 open bash: `vi ~/.bashrc`<br>
-set command: `alias di="/opt/diskinfo/diskinfo.sh -e 'shm overlay tmpfs devtmpfs'"`<br>
+set command: `alias di="echo -e 'alias for \033[0;35m/opt/diskinfo/diskinfo.sh -e \"shm overlay tmpfs devtmpfs\" \033[0m' && /opt/diskinfo/diskinfo.sh -e \"shm overlay tmpfs devtmpfs\""
+`<br>
 reload bash: `. ~/.bashrc`
 
 type in console: `di`<br>
