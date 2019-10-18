@@ -21,7 +21,7 @@ function ShowHelp {
     printf "%s\n" \
 	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-s|--sort mounted|size|used|free|usage|filesystem ] | [-r|--reverse] | [-h|--help] | [-v|--version]" \
 	       "" \
-               "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
+	           "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
 	       "exclude any filesystem type you want by setting the parameter" \
 	       "'-e|--excluded-types', following a list of filesystem types. " \
 	       "You have to set the list between quotes." \
@@ -35,9 +35,9 @@ function ShowHelp {
 	       "-b, --bar-length [INT]              length of progressbar (default: 20)" \
 	       "                                    example: -b 30" \
 	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
-	       "-s, --sort                          sort by column. default:  'mounted on'" \
+	       "-s, --sort                          sort by column. default:  'mounted'" \
 	       "                                    possible values: mounted|size|used|free|usage|filesystem" \
-           "                                    example: -s mounted" \
+	       "                                    example: -s mounted" \
 	       "-r, --reverse                       reverse sort columns" \
 	       "-h, --help                          display this help and exit" \
 	       "-v, --version                       output version information and exit" \
@@ -54,7 +54,7 @@ function ShowVersion {
 function ShowUnknownParam {
     printf "%s\n" \
 	       "$(basename $BASH_SOURCE): invalid option -- '$1'" \
-           "Try '$(basename $BASH_SOURCE) --help' for more information."
+	       "Try '$(basename $BASH_SOURCE) --help' for more information."
     exit 1
 }
 
@@ -63,62 +63,62 @@ shopt -s nocasematch  # set string compare to not case senstive
 while [[ $# -gt 0 ]];do
     key="$1"
     case $key in
-        -e|--excluded-types)
-        EXCLUDES="$2"
-        shift  # pass argument
-        shift  # pass value
-        ;;
-        -b|--bar-length)
-        BARLENGTH="$2"
-        shift  # pass argument
-        shift  # pass value
-        ;;
-        -s|--sort)
-        SORTKEY="$2"
-        shift  # pass argument
-        shift  # pass value
-        ;;
-        -r|--reverse)
-        REVERSE="-r"
-        shift  # pass argument
-        ;;
-        -v|--version)
-        ShowVersion
-        ;;
-        -h|--help)
-        ShowHelp
-        ;;
-        *)  # unknown option
+	    -e|--excluded-types)
+	    EXCLUDES="$2"
+	    shift  # pass argument
+	    shift  # pass value
+	    ;;
+	    -b|--bar-length)
+	    BARLENGTH="$2"
+	    shift  # pass argument
+	    shift  # pass value
+	    ;;
+	    -s|--sort)
+	    SORTKEY="$2"
+	    shift  # pass argument
+	    shift  # pass value
+	    ;;
+	    -r|--reverse)
+	    REVERSE="-r"
+	    shift  # pass argument
+	    ;;
+	    -v|--version)
+	    ShowVersion
+	    ;;
+	    -h|--help)
+	    ShowHelp
+	    ;;
+	    *)  # unknown option
 	    ShowUnknownParam "$1"
-        ;;
+	    ;;
     esac  # end case
 done
 
 if [ -n "${SORTKEY}" ]; then
     case $SORTKEY in
-        "mounted")
-        SORTEDBY=1
-        ;;
-        "size")
-        SORTEDBY="2 -h"
-        ;;
-        "used")
-        SORTEDBY="3 -h"
-        ;;
-        "free")
-        SORTEDBY="4 -h"
-        ;;
-        "usage")
-        SORTEDBY="3 -h"
-        ;;
-        "filesystem")
-        SORTEDBY=6
-        ;;
-        *)
-        SORTEDBY=1
-        printf "'$SORTKEY not found!"
-        ShowHelp
-        ;;
+	    "mounted")
+	    SORTEDBY=1
+	    ;;
+	    "size")
+	    SORTEDBY="2 -h"
+	    ;;
+	    "used")
+	    SORTEDBY="3 -h"
+	    ;;
+	    "free")
+	    SORTEDBY="4 -h"
+	    ;;
+	    "usage")
+	    SORTEDBY="3 -h"
+	    ;;
+	    "filesystem")
+	    SORTEDBY=6
+	    ;;
+	    *)
+	    SORTEDBY=1
+	    printf "'$SORTKEY not found!"
+	    ShowHelp
+	    ;;
     esac
 else
     SORTEDBY=1
