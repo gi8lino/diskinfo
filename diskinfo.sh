@@ -98,19 +98,19 @@ case $SORTKEY in
     SORTEDBY=1
     ;;
     "size")
-    SORTEDBY=3
+    SORTEDBY="2 -h"
     ;;
     "used")
-    SORTEDBY=4
+    SORTEDBY="3 -h"
     ;;
     "free")
-    SORTEDBY=5
+    SORTEDBY="4 -h"
     ;;
     "usage")
-    SORTEDBY=7
+    SORTEDBY="3 -h"
     ;;
     "filesystem")
-    SORTEDBY=7
+    SORTEDBY=6
     ;;
     *)
     SORTEDBY=1
@@ -118,8 +118,6 @@ case $SORTKEY in
     ShowHelp
     ;;
 esac
-
-
 
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
 
