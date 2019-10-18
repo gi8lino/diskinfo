@@ -115,43 +115,43 @@ FS_WIDTH=20
 if [ -n "${SORTKEY}" ]; then
     case $SORTKEY in
         mounted|m)
-        SORTEDBY=1
+        SORTED_BY=1
         MOUNTED_WIDTH=$((${MOUNTED_WIDTH}+2))
         MOUNTED_SORT="$SORT_DIRECTION"
         ;;
         size|s)
-        SORTEDBY="2 -h"
+        SORTED_BY="2 -h"
         SIZE_WIDTH=$((${SIZE_WIDTH}+2))
         SIZE_SORT="$SORT_DIRECTION"
         ;;
         used|ud)
-        SORTEDBY="3 -h"
+        SORTED_BY="3 -h"
         USED_WIDTH=$((${USED_WIDTH}+2))
         USED_SORT="$SORT_DIRECTION"
         ;;
         free|f)
-        SORTEDBY="4 -h"
+        SORTED_BY="4 -h"
         FREE_WIDTH=$((${FREE_WIDTH}+2))
         FREE_SORT="$SORT_DIRECTION"
         ;;
         usage|ug)
-        SORTEDBY="6 -h"
+        SORTED_BY="6 -h"
 	    USAGE_WIDTH=${USAGE_WIDTH}
 	    FS_WIDTH=$((${FS_WIDTH}+2))
         USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
-        SORTEDBY=7
+        SORTED_BY=7
 	    FS_WIDTH=$((${FS_WIDTH}+3))
         FS_SORT="$SORT_DIRECTION"
         ;;
         *)
-        SORTEDBY=1
-        printf "sort key '$SORTKEY does not exists!\n"
+        SORTED_BY=1
+        printf "sort key '$SORTKEY' does not exists!\n"
         ;;
     esac
 else
-    SORTEDBY=1
+    SORTED_BY=1
     MOUNTED_WIDTH=$((${MOUNTED_WIDTH}+2))
     MOUNTED_SORT="$SORT_DIRECTION"
 fi
@@ -175,5 +175,5 @@ while IFS=' ', read -a input; do
         printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
     fi
 
-done <<< "$(df -h | tail -n +2)" | sort -k$SORTEDBY $REVERSE
+done <<< "$(df -h | tail -n +2)" | sort -k$SORTED_BY $REVERSE
 exit 0
