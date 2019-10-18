@@ -35,7 +35,7 @@ function ShowHelp {
 	       "-b, --bar-length [INT]              length of progressbar (default: 20)" \
 	       "                                    example: -b 30" \
 	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
-	       "-s, --sort                          sort by column. (default: 'mounted')" \
+	       "-s, --sort                          ascending sort by column (default: mounted)" \
 	       "                                    possible values: mounted|size|used|free|usage|filesystem *" \
 	       "                                    example: -s mounted" \
 	       "-r, --reverse                       sort columns descending" \
@@ -147,7 +147,7 @@ if [ -n "${SORTKEY}" ]; then
         ;;
         *)
         SORTEDBY=1
-        printf "'$SORTKEY not found!\n"
+        printf "sort key '$SORTKEY does not exists!\n"
         ;;
     esac
 else

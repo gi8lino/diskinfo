@@ -6,7 +6,7 @@ The disk usage in percent next to the progressbar will not be rounded.<br>
 ### optional parameters:
 * `-e, --excluded-types` - types of filesystem to hide. List of strings, separatet by a space. example: `-e "shm overlay tmpfs devtmpfs"`
 * `-b, --bar-length` - length of the progressbar. default: 20. Example: [#######-------------] 33%
-* `-s, --sort` - sort by column. default:  'mounted'. possible values: mounted|size|used|free|usage|filesystem
+* `-s, --sort` - ascending sort by column (default: mounted). possible values: mounted|size|used|free|usage|filesystem
 * `-r, --reverse` - sort columns descending
 * `-h, --help` - display help and exit
 * `-v, --version` - output version information and exit
