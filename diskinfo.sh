@@ -94,6 +94,12 @@ while [[ $# -gt 0 ]];do
     esac  # end case
 done
 
+if [ -z "${REVERSE}" ]; then
+    sortdirection="↑"
+else    
+    sortdirection="↓"
+fi
+
 # default width
 MOUNTED_WIDTH=22
 SIZE_WIDTH=8
