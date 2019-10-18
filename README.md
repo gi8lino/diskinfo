@@ -11,6 +11,9 @@ The actual disk usage next to the progressbar will not be rounded.<br>
 * `-r, --reverse` - reverse sort columns
 * `-v, --version` - output version information and exit
 
+*abbreviation
+ mounted: m, size: s, used: d, free: f, usage: u, filesystem: f
+
 ## usage
 `diskinfo.sh [-e|--excluded-types "TYPE ..."] [-b|--bar-length INT] | [-s|--sort mounted|size|used|free|usage|filesystem ] | [-r|--reverse] | [-h|--help] | [-v|--version]`
 
