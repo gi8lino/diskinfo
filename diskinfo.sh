@@ -6,7 +6,7 @@ function ShowUsage {
     local _percent=$1
     local _barlength=$2
   
-    (( _rounded = (${_percent}+2)/5, _rounded *= 5))  # round to the next five percent
+    ((_rounded = (${_percent}+2)/5, _rounded *= 5))  # round to the next five percent
     let _used=(_barlength*_rounded/100)  # used in relation to bar length
     let _free=(_barlength-_used)  # rest
     
@@ -35,7 +35,8 @@ function ShowHelp {
 	       "-b, --bar-length [INT]              length of progressbar (default: 20)" \
 	       "                                    example: -b 30" \
 	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
-	       "-s, --sort                          sort by this column. default:  'mounted on'" \
+	       "-s, --sort                          sort by column. default:  'mounted on'" \
+	       "                                    possible values: mounted|size|used|free|usage|filesystem"
 	       "-r, --reverse                       reverse sort columns " \
 	       "-h, --help                          display this help and exit" \
 	       "-v, --version                       output version information and exit" \
