@@ -19,7 +19,7 @@ function ShowUsage {
 
 function ShowHelp {
     printf "%s\n" \
-	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-s|--sort mounted|size|used|free|usage|filesystem ] | [-r|--reverse] | [-h|--help] | [-v|--version]" \
+	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-s|--sort mounted|size|used|free|usage|filesystem] | [-r|--reverse] | [-h|--help] | [-v|--version]" \
 	       "" \
 	           "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
 	       "exclude any filesystem type you want by setting the parameter" \
@@ -39,8 +39,8 @@ function ShowHelp {
 	       "                                    possible values: mounted|size|used|free|usage|filesystem *" \
 	       "                                    example: -s mounted" \
 	       "-r, --reverse                       sort columns descending" \
-	       "-v, --version                       output version information and exit" \
 	       "-h, --help                          display this help and exit" \
+	       "-v, --version                       output version information and exit" \
 	       "" \
 	       "*abbreviation:" \
 	       " mounted: m, size: s, used: ud, free: f, usage: ug, filesystem: fs" \
