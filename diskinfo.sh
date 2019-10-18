@@ -137,7 +137,7 @@ if [ -n "${SORTKEY}" ]; then
         ;;
         *)
         SORTEDBY=1
-        printf "'$SORTKEY not found!"
+        printf "'$SORTKEY not found!\n"
         ;;
     esac
 else
