@@ -148,6 +148,8 @@ if [ -n "${SORTKEY}" ]; then
     esac
 else
     SORTEDBY=1
+    MOUNTED_WIDTH=$((${MOUNTED_WIDTH}+2))
+    MOUNTED_SORT="$sortdirection"
 fi
 
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
