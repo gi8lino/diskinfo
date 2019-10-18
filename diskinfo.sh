@@ -35,6 +35,8 @@ function ShowHelp {
 	       "-b, --bar-length [INT]              length of progressbar (default: 20)" \
 	       "                                    example: -b 30" \
 	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
+	       "-s, --sort                          sort by this column. default:  'mounted on'" \
+	       "-r, --reverse                       reverse sort columns " \
 	       "-h, --help                          display this help and exit" \
 	       "-v, --version                       output version information and exit" \
 	       "" \
@@ -61,13 +63,22 @@ while [[ $# -gt 0 ]];do
     case $key in
         -e|--excluded-types)
         EXCLUDES="$2"
-        shift  # past argument
-        shift  # past value
+        shift  # pass argument
+        shift  # pass value
         ;;
         -b|--bar-length)
         BARLENGTH="$2"
-        shift  # past argument
-        shift  # past value
+        shift  # pass argument
+        shift  # pass value
+        ;;
+        -s|--sort)
+        SORTKEY="$2"
+        shift  # pass argument
+        shift  # pass value
+        ;;
+        -r|--reverse)
+        REVERSE="-r"
+        shift  # pass argument
         ;;
         -v|--version)
         ShowVersion
@@ -80,6 +91,35 @@ while [[ $# -gt 0 ]];do
         ;;
     esac  # end case
 done
+
+KEY=1
+case $SORTKEY in
+    "mounted")
+    KEY=1
+    ;;
+    "size")
+    KEY=3
+    ;;
+    "used")
+    KEY=4
+    ;;
+    "free")
+    KEY=5
+    ;;
+    "usage")
+    KEY=7
+    ;;
+    "filesystem")
+    KEY=7
+    ;;
+    *)
+    KEY=1
+    printf "'$SORTKEY not found!"
+    ShowHelp
+    ;;
+esac
+
+
 
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
 
@@ -102,5 +142,5 @@ while IFS=' ', read -a input; do
         printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
     fi
 done <<< "$(df -h)" |
-sort -n -k1
+sort -n -k1 $REVERSE
 exit 0
