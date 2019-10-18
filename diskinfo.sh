@@ -94,38 +94,58 @@ while [[ $# -gt 0 ]];do
     esac  # end case
 done
 
+# default width
+MOUNTED_WIDTH=22
+SIZE_WIDTH=8
+USED_WIDTH=8
+FREE_WIDTH=8
+USAGE_WIDTH=4
+FS_WIDTH=10
+
 if [ -n "${SORTKEY}" ]; then
     case $SORTKEY in
-	    "mounted")
-	    SORTEDBY=1
-	    ;;
-	    "size")
-	    SORTEDBY="2 -h"
-	    ;;
-	    "used")
-	    SORTEDBY="3 -h"
-	    ;;
-	    "free")
-	    SORTEDBY="4 -h"
-	    ;;
-	    "usage")
-	    SORTEDBY="3 -h"
-	    ;;
-	    "filesystem")
-	    SORTEDBY=6
-	    ;;
-	    *)
-	    SORTEDBY=1
-	    printf "'$SORTKEY not found!"
-	    ShowHelp
-	    ;;
+        "mounted")
+        SORTEDBY=1
+        MOUNTED_WIDTH=$((${MOUNTED_WIDTH}+2))
+        MOUNTED_SORT="$sortdirection"
+        ;;
+        "size")
+        SORTEDBY="2 -h"
+        SIZE_WIDTH=$((${SIZE_WIDTH}+2))
+        SIZE_SORT="$sortdirection"
+        ;;
+        "used")
+        SORTEDBY="3 -h"
+        USED_WIDTH=$((${USED_WIDTH}+2))
+        USED_SORT="$sortdirection"
+        ;;
+        "free")
+        SORTEDBY="4 -h"
+        FREE_WIDTH=$((${FREE_WIDTH}+2))
+        FREE_SORT="$sortdirection"
+        ;;
+        "usage")
+        SORTEDBY="3 -h"
+        USAGE_WIDTH=$((${USAGE_WIDTH}+2))
+        USAGE_SORT="$sortdirection"
+        ;;
+        "filesystem")
+        SORTEDBY=6
+        FS_WIDTH=${FS_WIDTH}
+        FS_SORT="$sortdirection"
+        ;;
+        *)
+        SORTEDBY=1
+        printf "'$SORTKEY not found!"
+        ;;
     esac
 else
     SORTEDBY=1
-fi 
+fi
+
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
 
-printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%10s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"  # title
+printf "%-${MOUNTED_WIDTH}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%${USAGE_WIDTH}s%-${BARLENGTH}s%${FS_WIDTH}s%-s\n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "" "usage${USAGE_SORT}" "" "filesystem${FS_SORT}"  # title
 
 skip=true  # to skip first line (header)
 # output disk usage
