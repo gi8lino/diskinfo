@@ -44,6 +44,7 @@ function ShowHelp {
 	       "" \
 	       "*abbreviation:" \
 	       " mounted: m, size: s, used: ud, free: f, usage: ug, filesystem: fs" \
+           "" \
 	       "created by gi8lino (2018)"
     exit 0
 }
