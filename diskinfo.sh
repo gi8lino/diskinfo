@@ -140,7 +140,7 @@ if [ -n "${SORTKEY}" ]; then
         USAGE_SORT="$sortdirection"
         ;;
         filesystem|fs)
-        SORTEDBY=6
+        SORTEDBY=7
 	FS_WIDTH=$((${FS_WIDTH}+3))
         FS_SORT="$sortdirection"
         ;;
