@@ -34,7 +34,7 @@ function ShowHelp {
 	       "                                    example: -e \"shm overlay tmpfs devtmpfs\"" \
 	       "-b, --bar-length [INT]              length of progressbar (default: 20)" \
 	       "                                    example: -b 30" \
-	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
+	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 ) + 1 )) 30)" \
 	       "-s, --sort                          ascending sort by column (default: mounted)" \
 	       "                                    possible values: mounted|size|used|free|usage|filesystem *" \
 	       "                                    example: -s mounted" \
