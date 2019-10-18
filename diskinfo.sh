@@ -92,28 +92,28 @@ while [[ $# -gt 0 ]];do
     esac  # end case
 done
 
-KEY=1
+SORTEDBY=1
 case $SORTKEY in
     "mounted")
-    KEY=1
+    SORTEDBY=1
     ;;
     "size")
-    KEY=3
+    SORTEDBY=3
     ;;
     "used")
-    KEY=4
+    SORTEDBY=4
     ;;
     "free")
-    KEY=5
+    SORTEDBY=5
     ;;
     "usage")
-    KEY=7
+    SORTEDBY=7
     ;;
     "filesystem")
-    KEY=7
+    SORTEDBY=7
     ;;
     *)
-    KEY=1
+    SORTEDBY=1
     printf "'$SORTKEY not found!"
     ShowHelp
     ;;
@@ -142,5 +142,5 @@ while IFS=' ', read -a input; do
         printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
     fi
 done <<< "$(df -h)" |
-sort -n -k1 $REVERSE
+sort -n -k$SORTEDBY $REVERSE
 exit 0
