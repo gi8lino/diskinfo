@@ -43,7 +43,7 @@ function ShowHelp {
 	       "-v, --version                       output version information and exit" \
 	       "" \
 	       "*abbreviation:" \
-	       " mounted: m, size: s, used: d, free: f, usage: u, filesystem: f" \
+	       " mounted: m, size: s, used: ud, free: f, usage: ug, filesystem: fs" \
 	       "created by gi8lino (2018)"
     exit 0
 }
@@ -123,7 +123,7 @@ if [ -n "${SORTKEY}" ]; then
         SIZE_WIDTH=$((${SIZE_WIDTH}+2))
         SIZE_SORT="$sortdirection"
         ;;
-        used|d)
+        used|ud)
         SORTEDBY="3 -h"
         USED_WIDTH=$((${USED_WIDTH}+2))
         USED_SORT="$sortdirection"
@@ -133,13 +133,13 @@ if [ -n "${SORTKEY}" ]; then
         FREE_WIDTH=$((${FREE_WIDTH}+2))
         FREE_SORT="$sortdirection"
         ;;
-        usage|u)
+        usage|ug)
         SORTEDBY="6 -h"
 	USAGE_WIDTH=${USAGE_WIDTH}
 	FS_WIDTH=$((${FS_WIDTH}+2))
         USAGE_SORT="$sortdirection"
         ;;
-        filesystem|f)
+        filesystem|fs)
         SORTEDBY=6
 	FS_WIDTH=$((${FS_WIDTH}+3))
         FS_SORT="$sortdirection"

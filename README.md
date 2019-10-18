@@ -12,7 +12,7 @@ The actual disk usage next to the progressbar will not be rounded.<br>
 * `-v, --version` - output version information and exit
 
 *abbreviation:<br>
- mounted: m, size: s, used: d, free: f, usage: u, filesystem: f
+ mounted: m, size: s, used: ud, free: f, usage: ug, filesystem: fs
 
 ## usage
 `diskinfo.sh [-e|--excluded-types "TYPE ..."] [-b|--bar-length INT] | [-s|--sort mounted|size|used|free|usage|filesystem ] | [-r|--reverse] | [-h|--help] | [-v|--version]`
