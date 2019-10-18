@@ -26,7 +26,7 @@ function ShowHelp {
 	       "'-e|--excluded-types', following a list of filesystem types. " \
 	       "You have to set the list between quotes." \
 	       "The progressbar will round up/down the progress to the next 5 percent." \
-	       "The actual disk usage next to the progressbar will not be rounded." \
+	       "The disk usage in percent next to the progressbar will not be rounded." \
 	       "" \
 	       "Optional Parameters:" \
 	       "-e, --excluded-types \"[Type] ...\"   types of filesystem to hide" \
