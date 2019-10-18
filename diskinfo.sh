@@ -35,10 +35,10 @@ function ShowHelp {
 	       "-b, --bar-length [INT]              length of progressbar (default: 20)" \
 	       "                                    example: -b 30" \
 	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
-	       "-s, --sort                          sort by column. default:  'mounted'" \
+	       "-s, --sort                          sort by column. (default: 'mounted')" \
 	       "                                    possible values: mounted|size|used|free|usage|filesystem *" \
 	       "                                    example: -s mounted" \
-	       "-r, --reverse                       reverse sort columns" \
+	       "-r, --reverse                       sort columns descending" \
 	       "-v, --version                       output version information and exit" \
 	       "-h, --help                          display this help and exit" \
 	       "" \
