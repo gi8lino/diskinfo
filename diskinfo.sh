@@ -39,8 +39,8 @@ function ShowHelp {
 	       "                                    possible values: mounted|size|used|free|usage|filesystem *" \
 	       "                                    example: -s mounted" \
 	       "-r, --reverse                       reverse sort columns" \
-	       "-h, --help                          display this help and exit" \
 	       "-v, --version                       output version information and exit" \
+	       "-h, --help                          display this help and exit" \
 	       "" \
 	       "*abbreviation:" \
 	       " mounted: m, size: s, used: ud, free: f, usage: ug, filesystem: fs" \
@@ -97,9 +97,9 @@ while [[ $# -gt 0 ]];do
 done
 
 if [ -z "${REVERSE}" ]; then
-    sortdirection="↑"
+    SORT_DIRECTION="↑"
 else    
-    sortdirection="↓"
+    SORT_DIRECTION="↓"
 fi
 
 # default width
@@ -116,33 +116,33 @@ if [ -n "${SORTKEY}" ]; then
         mounted|m)
         SORTEDBY=1
         MOUNTED_WIDTH=$((${MOUNTED_WIDTH}+2))
-        MOUNTED_SORT="$sortdirection"
+        MOUNTED_SORT="$SORT_DIRECTION"
         ;;
         size|s)
         SORTEDBY="2 -h"
         SIZE_WIDTH=$((${SIZE_WIDTH}+2))
-        SIZE_SORT="$sortdirection"
+        SIZE_SORT="$SORT_DIRECTION"
         ;;
         used|ud)
         SORTEDBY="3 -h"
         USED_WIDTH=$((${USED_WIDTH}+2))
-        USED_SORT="$sortdirection"
+        USED_SORT="$SORT_DIRECTION"
         ;;
         free|f)
         SORTEDBY="4 -h"
         FREE_WIDTH=$((${FREE_WIDTH}+2))
-        FREE_SORT="$sortdirection"
+        FREE_SORT="$SORT_DIRECTION"
         ;;
         usage|ug)
         SORTEDBY="6 -h"
-	USAGE_WIDTH=${USAGE_WIDTH}
-	FS_WIDTH=$((${FS_WIDTH}+2))
-        USAGE_SORT="$sortdirection"
+	    USAGE_WIDTH=${USAGE_WIDTH}
+	    FS_WIDTH=$((${FS_WIDTH}+2))
+        USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
         SORTEDBY=7
-	FS_WIDTH=$((${FS_WIDTH}+3))
-        FS_SORT="$sortdirection"
+	    FS_WIDTH=$((${FS_WIDTH}+3))
+        FS_SORT="$SORT_DIRECTION"
         ;;
         *)
         SORTEDBY=1
@@ -152,12 +152,13 @@ if [ -n "${SORTKEY}" ]; then
 else
     SORTEDBY=1
     MOUNTED_WIDTH=$((${MOUNTED_WIDTH}+2))
-    MOUNTED_SORT="$sortdirection"
+    MOUNTED_SORT="$SORT_DIRECTION"
 fi
 
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
 
-printf "%-${MOUNTED_WIDTH}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%${USAGE_WIDTH}s%-${BARLENGTH}s%${FS_WIDTH}s%-s\n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "" "usage${USAGE_SORT}" "filesystem${FS_SORT}"  # title
+# title
+printf "%-${MOUNTED_WIDTH}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%${USAGE_WIDTH}s%-${BARLENGTH}s%${FS_WIDTH}s%-s\n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "" "usage${USAGE_SORT}" "filesystem${FS_SORT}"
 
 # output disk usage
 while IFS=' ', read -a input; do
@@ -172,6 +173,6 @@ while IFS=' ', read -a input; do
     if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then
         printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%3s%4s%-s\n" ${mounted} ${size} ${used} ${avail} "" "$(ShowUsage ${use::-1} ${BARLENGTH}) " ${use} "" ${filesystem}
     fi
-done <<< "$(df -h | tail -n +2)" |
-    sort -k$SORTEDBY $REVERSE
+
+done <<< "$(df -h | tail -n +2)" | sort -k$SORTEDBY $REVERSE
 exit 0

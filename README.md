@@ -1,18 +1,23 @@
 ## description
 Show diskinfo (df -h) with a progressbar for disk usage. You can exclude any filesystem type you want by setting the parameter <br>
-'-e|--excluded-types', following a list of filesystem types. Set the list between quotes. The progressbar will round up or down the progress to the next 5 percent.<br>
-The actual disk usage next to the progressbar will not be rounded.<br>
+'-e|--excluded-types', following a list of filesystem types. Set the list between quotes. The progressbar will be round up or down the progress to the next 5 percent.<br>
+The disk usage in percent next to the progressbar will not be rounded.<br>
 
 ### optional parameters:
 * `-e, --excluded-types` - types of filesystem to hide. List of strings, separatet by a space. example: `-e "shm overlay tmpfs devtmpfs"`
 * `-b, --bar-length` - length of the progressbar. default: 20. Example: [#######-------------] 33%
-* `-h, --help` - display help and exit
 * `-s, --sort` - sort by column. default:  'mounted'. possible values: mounted|size|used|free|usage|filesystem
 * `-r, --reverse` - reverse sort columns
 * `-v, --version` - output version information and exit
+* `-h, --help` - display help and exit
 
-*abbreviation:<br>
- mounted: m, size: s, used: ud, free: f, usage: ug, filesystem: fs
+\* *abbreviation:*<br>
+   *mounted: m*<br>
+   *size: s*<br>
+   *used: ud*<br>
+   *free: f*<br>
+   *usage: ug*<br>
+   *filesystem: fs*
 
 ## usage
 `diskinfo.sh [-e|--excluded-types "TYPE ..."] [-b|--bar-length INT] | [-s|--sort mounted|size|used|free|usage|filesystem] | [-r|--reverse] | [-h|--help] | [-v|--version]`
