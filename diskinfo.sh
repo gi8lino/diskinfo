@@ -19,7 +19,7 @@ function ShowUsage {
 
 function ShowHelp {
     printf "%s\n" \
-	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-h|--help] | [-v|--version]" \
+	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-s|--sort mounted|size|used|free|usage|filesystem ] | [-r|--reverse] | [-h|--help] | [-v|--version]" \
 	       "" \
                "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
 	       "exclude any filesystem type you want by setting the parameter" \
@@ -37,7 +37,8 @@ function ShowHelp {
 	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 )  + 1 )) 30)" \
 	       "-s, --sort                          sort by column. default:  'mounted on'" \
 	       "                                    possible values: mounted|size|used|free|usage|filesystem" \
-	       "-r, --reverse                       reverse sort columns " \
+           "                                    example: -s mounted" \
+	       "-r, --reverse                       reverse sort columns" \
 	       "-h, --help                          display this help and exit" \
 	       "-v, --version                       output version information and exit" \
 	       "" \
@@ -93,33 +94,35 @@ while [[ $# -gt 0 ]];do
     esac  # end case
 done
 
-SORTEDBY=1
-case $SORTKEY in
-    "mounted")
+if [ -n "${SORTKEY}" ]; then
+    case $SORTKEY in
+        "mounted")
+        SORTEDBY=1
+        ;;
+        "size")
+        SORTEDBY="2 -h"
+        ;;
+        "used")
+        SORTEDBY="3 -h"
+        ;;
+        "free")
+        SORTEDBY="4 -h"
+        ;;
+        "usage")
+        SORTEDBY="3 -h"
+        ;;
+        "filesystem")
+        SORTEDBY=6
+        ;;
+        *)
+        SORTEDBY=1
+        printf "'$SORTKEY not found!"
+        ShowHelp
+        ;;
+    esac
+else
     SORTEDBY=1
-    ;;
-    "size")
-    SORTEDBY="2 -h"
-    ;;
-    "used")
-    SORTEDBY="3 -h"
-    ;;
-    "free")
-    SORTEDBY="4 -h"
-    ;;
-    "usage")
-    SORTEDBY="3 -h"
-    ;;
-    "filesystem")
-    SORTEDBY=6
-    ;;
-    *)
-    SORTEDBY=1
-    printf "'$SORTKEY not found!"
-    ShowHelp
-    ;;
-esac
-
+fi 
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
 
 printf "%-22s%8s%8s%8s%4s%-${BARLENGTH}s%10s%-s\n" "mounted on" "size" "used" "free" "" "usage" "" "filesystem"  # title
