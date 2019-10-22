@@ -107,6 +107,7 @@ else
 fi
 
 diskinfo=()
+MOUNTED_LEN=0
 # output disk usage
 while IFS=' ', read -a input; do
     filesystem="${input[0]}"
