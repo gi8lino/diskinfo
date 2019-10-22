@@ -191,7 +191,6 @@ for line in "${diskinfo[@]}";do
     percent="${info[5]}"
     filesystem="${info[6]}"
 
-    #echo -e ${info}
     printf "%-${MOUNTED_LEN}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s%${PERCENT_WIDTH}s%5s%s \n"  ${mounted} ${size} ${used} ${free} ${bar} ${percent} "" ${filesystem}
 done <<< "${diskinfo[@]}"
 
