@@ -180,10 +180,12 @@ if [ -n "${SORTKEY}" ]; then
     [[ ! ${SORT_ERR} ]] && readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
 fi
 
+# title
 printf "%-$(( ${MOUNTED_LEN} + ${SORTED_MOUNTED_WIDTH} ))s%$(( ${SIZE_WIDTH} + ${SORTED_SIZE_WIDTH} ))s%$(( ${USED_WIDTH} + ${SORTED_USED_WIDTH} ))s%$(( ${FREE_WIDTH} + ${SORTED_FREE_WIDTH} ))s%$(( ${USAGE_WIDTH} + ${SORTED_USAGE_WIDTH} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
-echo -e $MOUNTED_LEN
+
+# print disk information
 for line in "${diskinfo[@]}";do
-    IFS=' ' read -r -a info <<< "${line}"
+    IFS=' ' read -r -a info <<< "${line}"  # split line
     
     mounted="${info[0]}"
     size="${info[1]}"
