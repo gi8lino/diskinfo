@@ -107,7 +107,7 @@ fi
 declare -a diskinfo
 MOUNTED_LEN=0
 # output disk usage
-while IFS=' ', read -a input; do
+while IFS=' ', read -ra input; do
     filesystem="${input[0]}"
     size="${input[1]}"
     used="${input[2]}"
@@ -182,8 +182,7 @@ printf "%-$(( ${MOUNTED_LEN} + ${sort_mounted_correction} ))s%$(( ${SIZE_WIDTH} 
 
 # print disk information
 for line in "${diskinfo[@]}";do
-    IFS=' ' read -r -a info <<< "${line}"  # split line
-#while IFS=' ', read -r -a info; do
+    IFS=' ' read -ra info <<< "${line}"  # split line
     mounted="${info[0]}"
     size="${info[1]}"
     used="${info[2]}"
