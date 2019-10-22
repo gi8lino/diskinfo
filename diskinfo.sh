@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="2.0.1"
+VERSION="2.0"
 
 function ShowUsage {
     local _percent=$1
@@ -20,7 +20,7 @@ function ShowUsage {
 function ShowHelp {
     printf "%s\n" \
 	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-s|--sort mounted|size|used|free|usage|filesystem] | [-r|--reverse] | [-h|--help] | [-v|--version]" \
-	       "" \
+	       	       "" \
 	           "Show diskinfo (df -h) with a progressbar for disk usage." \
 	       "The progressbar will round up/down the progress to the next 5 percent." \
 	       "The disk usage in percent next to the progressbar will not be rounded." \
@@ -76,7 +76,7 @@ while [[ $# -gt 0 ]];do
 	    shift  # pass value
 	    ;;
 	    -s|--sort)
-	    SORT_KEY="$2"
+	    SORTKEY="$2"
 	    shift  # pass argument
 	    shift  # pass value
 	    ;;
@@ -96,7 +96,7 @@ while [[ $# -gt 0 ]];do
     esac  # end case
 done
 
-[[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BAR_LENGTH=20  # if barlength value is not set or not a number, set barlength to 20
+[[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
 
 if [ -z "${REVERSE}" ]; then
     SORT_DIRECTION="↑"
@@ -105,7 +105,8 @@ else
 fi
 
 diskinfo=()
-mounted_len=0
+MOUNTED_LEN=0
+# output disk usage
 while IFS=' ', read -a input; do
     filesystem="${input[0]}"
     size="${input[1]}"
@@ -114,11 +115,12 @@ while IFS=' ', read -a input; do
     use="${input[4]}"
     mounted="${input[5]}"
 
-    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then  # check if filesystem is in excluded list
+    # check if filesystem is in excluded list
+    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then
         diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
-        current_mounted_len=${#mounted}
-        [[ ${current_mounted_len} -gt  $mounted_len ]] && mounted_len=${current_mounted_len}  # get longest string lenght
+        [[ ${#mounted} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${#mounted}
     fi
+
 done <<< "$(df -h | tail -n +2)"  # tail for skipping header
 
 # default column width
@@ -129,38 +131,38 @@ USAGE_WIDTH=9
 PERCENT_WIDTH=5
 
 # initalize variables for adjustment of header space distance
-mounted_distance=0
-size_distance=0
-used_distance=0
-free_distance=0
-usage_distance=0
+sort_mounted_correction=0
+sort_size_correction=0
+sort_used_correction=0
+sort_free_correction=0
+sort_usage_correction=0
 
 # set header space distance and set direction symbol
-if [ -n "${SORT_KEY=free}" ]; then
-    case $SORT_KEY in
+if [ -n "${SORTKEY}" ]; then
+    case $SORTKEY in
         mounted|m)
         SORTED_BY=1
-        mounted_distance=2
+        sort_mounted_correction=2
         MOUNTED_SORT="$SORT_DIRECTION"
         ;;
         size|s)
         SORTED_BY="2 -h"
-        size_distance=2
+        sort_size_correction=2
         SIZE_SORT="$SORT_DIRECTION"
         ;;
         used|ud)
         SORTED_BY="3 -h"
-        used_distance=2
+        sort_used_correction=2
         USED_SORT="$SORT_DIRECTION"
         ;;
         free|f)
         SORTED_BY="4 -h"
-        free_distance=3
+        sort_free_correction=3
         FREE_SORT="$SORT_DIRECTION"
         ;;
         usage|ug)
         SORTED_BY="6 -h"
-	    usage_distance=3
+	    sort_usage_correction=3
         USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
@@ -169,7 +171,7 @@ if [ -n "${SORT_KEY=free}" ]; then
         ;;
         *)
         SORT_ERR=true
-        printf "sort key '$SORT_KEY' does not exists!\n"
+        printf "sort key '$SORTKEY' does not exists!\n"
         ;;
     esac
     IFS=' '
@@ -177,7 +179,7 @@ if [ -n "${SORT_KEY=free}" ]; then
 fi
 
 # print title
-printf "%-$(( ${mounted_len} + ${mounted_distance} ))s%$(( ${SIZE_WIDTH} + ${size_distance} ))s%$(( ${USED_WIDTH} + ${used_distance} ))s%$(( ${FREE_WIDTH} + ${free_distance} ))s%$(( ${USAGE_WIDTH} + ${usage_distance} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
+printf "%-$(( ${MOUNTED_LEN} + ${sort_mounted_correction} ))s%$(( ${SIZE_WIDTH} + ${sort_size_correction} ))s%$(( ${USED_WIDTH} + ${sort_used_correction} ))s%$(( ${FREE_WIDTH} + ${sort_free_correction} ))s%$(( ${USAGE_WIDTH} + ${sort_usage_correction} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
 
 # print disk information
 while IFS=' ', read -a info; do
@@ -189,8 +191,8 @@ while IFS=' ', read -a info; do
     percent="${info[5]}"
     filesystem="${info[6]}"
 
-    printf "%-${mounted_len}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n"  ${mounted} ${size} ${used} ${free} ${bar} ${percent} "" ${filesystem}
+    printf "%-${MOUNTED_LEN}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n"  ${mounted} ${size} ${used} ${free} ${bar} ${percent} "" ${filesystem}
 
-done <<< ${diskinfo[@]}
+done <<< "${diskinfo[@]}"
 
 exit 0
