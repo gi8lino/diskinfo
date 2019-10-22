@@ -180,8 +180,8 @@ fi
 printf "%-$(( ${mounted_len} + ${mounted_distance} ))s%$(( ${SIZE_WIDTH} + ${size_distance} ))s%$(( ${USED_WIDTH} + ${used_distance} ))s%$(( ${FREE_WIDTH} + ${free_distance} ))s%$(( ${USAGE_WIDTH} + ${usage_distance} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
 
 # print disk information
-for line in "${diskinfo[@]}";do
-    IFS=' ' read -r -a info <<< "${line}"  # split line into array
+#for line in "${diskinfo[@]}";do
+while IFS=' ', read -a info; do
     mounted="${info[0]}"
     size="${info[1]}"
     used="${info[2]}"
@@ -191,6 +191,7 @@ for line in "${diskinfo[@]}";do
     filesystem="${info[6]}"
 
     printf "%-${mounted_len}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n"  ${mounted} ${size} ${used} ${free} ${bar} ${percent} "" ${filesystem}
-done
+
+done <<< ${diskinfo[@]}
 
 exit 0
