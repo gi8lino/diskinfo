@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="2.0.1"
+VERSION="2.0"
 
 function ShowUsage {
     local _percent=$1
@@ -172,11 +172,11 @@ if [ -n "${SORTKEY}" ]; then
         FS_SORT="$SORT_DIRECTION"
         ;;
         *)
-        SORTED_BY=1
+        SORT_ERR=true
         printf "sort key '$SORTKEY' does not exists!\n"
         ;;
     esac
-    readarray diskinfo < <(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
+    [[ ! ${SORT_ERR} ]] && readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
 fi
 
 printf "%-$(( ${MOUNTED_LEN} + ${SORTED_MOUNTED_WIDTH} ))s%$(( ${SIZE_WIDTH} + ${SORTED_SIZE_WIDTH} ))s%$(( ${USED_WIDTH} + ${SORTED_USED_WIDTH} ))s%$(( ${FREE_WIDTH} + ${SORTED_FREE_WIDTH} ))s%$(( ${USAGE_WIDTH} + ${SORTED_USAGE_WIDTH} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
