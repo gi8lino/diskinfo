@@ -177,7 +177,7 @@ if [ -n "${SORTKEY}" ]; then
         printf "sort key '$SORTKEY' does not exists!\n"
         ;;
     esac
-    [[ ! ${SORT_ERR} ]] && IFS='\n' readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
+    [[ ! ${SORT_ERR} ]] && readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
 fi
 
 # title
