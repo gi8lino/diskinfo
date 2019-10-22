@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="2.0"
+VERSION="2.0.1"
 
 function ShowUsage {
     local _percent=$1
@@ -180,7 +180,6 @@ fi
 printf "%-$(( ${mounted_len} + ${mounted_distance} ))s%$(( ${SIZE_WIDTH} + ${size_distance} ))s%$(( ${USED_WIDTH} + ${used_distance} ))s%$(( ${FREE_WIDTH} + ${free_distance} ))s%$(( ${USAGE_WIDTH} + ${usage_distance} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
 
 # print disk information
-#for line in "${diskinfo[@]}";do
 while IFS=' ', read -a info; do
     mounted="${info[0]}"
     size="${info[1]}"
