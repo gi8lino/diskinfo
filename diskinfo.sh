@@ -119,8 +119,8 @@ while IFS=' ', read -a input; do
 
     # check if filesystem is in excluded list
     if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then
-        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
-        [[ ${#mounted} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${#mounted}
+        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )  # append values to an array to sort the array before print out
+        [[ ${#mounted} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${#mounted}  # get max length for first column
     fi
 
 done <<< "$(df -h | tail -n +2)"  # tail for skipping header
@@ -177,7 +177,7 @@ if [ -n "${SORTKEY}" ]; then
         printf "sort key '$SORTKEY' does not exists!\n"
         ;;
     esac
-    [[ ! ${SORT_ERR} ]] && readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
+    [[ ! ${SORT_ERR} ]] && IFS='\n' readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
 fi
 
 # title
