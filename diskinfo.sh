@@ -21,10 +21,7 @@ function ShowHelp {
     printf "%s\n" \
 	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-s|--sort mounted|size|used|free|usage|filesystem] | [-r|--reverse] | [-h|--help] | [-v|--version]" \
 	       "" \
-	           "Show diskinfo (df -h) with a progressbar for disk usage. You can" \
-	       "exclude any filesystem type you want by setting the parameter" \
-	       "'-e|--excluded-types', following a list of filesystem types. " \
-	       "You have to set the list between quotes." \
+	           "Show diskinfo (df -h) with a progressbar for disk usage." \
 	       "The progressbar will round up/down the progress to the next 5 percent." \
 	       "The disk usage in percent next to the progressbar will not be rounded." \
 	       "" \
@@ -42,10 +39,10 @@ function ShowHelp {
 	       "-h, --help                          display this help and exit" \
 	       "-v, --version                       output version information and exit" \
 	       "" \
-	       "*abbreviation:" \
+	       "*abbreviations:" \
 	       " mounted: m, size: s, used: ud, free: f, usage: ug, filesystem: fs" \
            "" \
-	       "created by gi8lino (2018)"
+	       "created by gi8lino (2019)"
     exit 0
 }
 
@@ -79,7 +76,7 @@ while [[ $# -gt 0 ]];do
 	    shift  # pass value
 	    ;;
 	    -s|--sort)
-	    SORTKEY="$2"
+	    SORT_KEY="$2"
 	    shift  # pass argument
 	    shift  # pass value
 	    ;;
@@ -99,7 +96,7 @@ while [[ $# -gt 0 ]];do
     esac  # end case
 done
 
-[[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
+[[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BAR_LENGTH=20  # if barlength value is not set or not a number, set barlength to 20
 
 if [ -z "${REVERSE}" ]; then
     SORT_DIRECTION="↑"
@@ -108,8 +105,7 @@ else
 fi
 
 diskinfo=()
-MOUNTED_LEN=0
-# output disk usage
+mounted_len=0
 while IFS=' ', read -a input; do
     filesystem="${input[0]}"
     size="${input[1]}"
@@ -118,55 +114,53 @@ while IFS=' ', read -a input; do
     use="${input[4]}"
     mounted="${input[5]}"
 
-    # check if filesystem is in excluded list
-    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then
+    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then  # check if filesystem is in excluded list
         diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
-        [[ ${#mounted} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${#mounted}
+        current_mounted_len=${#mounted}
+        [[ ${current_mounted_len} -gt  $mounted_len ]] && mounted_len=${current_mounted_len}  # get longest string lenght
     fi
-
 done <<< "$(df -h | tail -n +2)"  # tail for skipping header
 
-# default width
-MOUNTED_WIDTH=22
+# default column width
 SIZE_WIDTH=8
 USED_WIDTH=8
 FREE_WIDTH=8
 USAGE_WIDTH=9
 PERCENT_WIDTH=5
 
-# initalize variables
-SORTED_MOUNTED_WIDTH=0
-SORTED_SIZE_WIDTH=0
-SORTED_USED_WIDTH=0
-SORTED_FREE_WIDTH=0
-SORTED_USAGE_WIDTH=0
+# initalize variables for adjustment of header space distance
+mounted_distance=0
+size_distance=0
+used_distance=0
+free_distance=0
+usage_distance=0
 
-# correct width and set direction symbol
-if [ -n "${SORTKEY=free}" ]; then
-    case $SORTKEY in
+# set header space distance and set direction symbol
+if [ -n "${SORT_KEY=free}" ]; then
+    case $SORT_KEY in
         mounted|m)
         SORTED_BY=1
-        SORTED_MOUNTED_WIDTH=2
+        mounted_distance=2
         MOUNTED_SORT="$SORT_DIRECTION"
         ;;
         size|s)
         SORTED_BY="2 -h"
-        SORTED_SIZE_WIDTH=2
+        size_distance=2
         SIZE_SORT="$SORT_DIRECTION"
         ;;
         used|ud)
         SORTED_BY="3 -h"
-        SORTED_USED_WIDTH=2
+        used_distance=2
         USED_SORT="$SORT_DIRECTION"
         ;;
         free|f)
         SORTED_BY="4 -h"
-        SORTED_FREE_WIDTH=3
+        free_distance=3
         FREE_SORT="$SORT_DIRECTION"
         ;;
         usage|ug)
         SORTED_BY="6 -h"
-	    SORTED_USAGE_WIDTH=3
+	    usage_distance=3
         USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
@@ -175,20 +169,19 @@ if [ -n "${SORTKEY=free}" ]; then
         ;;
         *)
         SORT_ERR=true
-        printf "sort key '$SORTKEY' does not exists!\n"
+        printf "sort key '$SORT_KEY' does not exists!\n"
         ;;
     esac
     IFS=' '
-    readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
+    readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)  # sort array according sort selection
 fi
 
 # print title
-printf "%-$(( ${MOUNTED_LEN} + ${SORTED_MOUNTED_WIDTH} ))s%$(( ${SIZE_WIDTH} + ${SORTED_SIZE_WIDTH} ))s%$(( ${USED_WIDTH} + ${SORTED_USED_WIDTH} ))s%$(( ${FREE_WIDTH} + ${SORTED_FREE_WIDTH} ))s%$(( ${USAGE_WIDTH} + ${SORTED_USAGE_WIDTH} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
+printf "%-$(( ${mounted_len} + ${mounted_distance} ))s%$(( ${SIZE_WIDTH} + ${size_distance} ))s%$(( ${USED_WIDTH} + ${used_distance} ))s%$(( ${FREE_WIDTH} + ${free_distance} ))s%$(( ${USAGE_WIDTH} + ${usage_distance} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
 
 # print disk information
 for line in "${diskinfo[@]}";do
-    IFS=' ' read -r -a info <<< "${line}"
-    
+    IFS=' ' read -r -a info <<< "${line}"  # split line into array
     mounted="${info[0]}"
     size="${info[1]}"
     used="${info[2]}"
@@ -197,8 +190,7 @@ for line in "${diskinfo[@]}";do
     percent="${info[5]}"
     filesystem="${info[6]}"
 
-    printf "%-${MOUNTED_LEN}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n"  ${mounted} ${size} ${used} ${free} ${bar} ${percent} "" ${filesystem}
-
+    printf "%-${mounted_len}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n"  ${mounted} ${size} ${used} ${free} ${bar} ${percent} "" ${filesystem}
 done
 
 exit 0
