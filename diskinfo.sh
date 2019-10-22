@@ -178,6 +178,7 @@ if [ -n "${SORTKEY=free}" ]; then
         printf "sort key '$SORTKEY' does not exists!\n"
         ;;
     esac
+    IFS=' '
     readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
 fi
 
