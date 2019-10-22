@@ -181,17 +181,17 @@ if [ -n "${SORTKEY}" ]; then
 fi
 
 printf "%-$(( ${MOUNTED_LEN} + ${SORTED_MOUNTED_WIDTH} ))s%$(( ${SIZE_WIDTH} + ${SORTED_SIZE_WIDTH} ))s%$(( ${USED_WIDTH} + ${SORTED_USED_WIDTH} ))s%$(( ${FREE_WIDTH} + ${SORTED_FREE_WIDTH} ))s%$(( ${USAGE_WIDTH} + ${SORTED_USAGE_WIDTH} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
-
+echo -e $MOUNTED_LEN
 for line in "${diskinfo[@]}";do
     IFS=' ' read -r -a info <<< "${line}"
     
-    filesystem="${info[0]}"
+    mounted="${info[0]}"
     size="${info[1]}"
     used="${info[2]}"
     free="${info[3]}"
     bar="${info[4]}"
     percent="${info[5]}"
-    mounted="${info[6]}"
+    filesystem="${info[6]}"
 
     printf "%-${MOUNTED_LEN}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n"  ${mounted} ${size} ${used} ${free} ${bar} ${percent} "" ${filesystem}
 
