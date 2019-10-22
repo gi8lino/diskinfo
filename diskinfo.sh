@@ -62,6 +62,7 @@ function ShowUnknownParam {
 }
 
 shopt -s nocasematch  # set string compare to not case senstive
+unset IFS
 
 # read start parameter
 while [[ $# -gt 0 ]];do
@@ -119,8 +120,8 @@ while IFS=' ', read -a input; do
 
     # check if filesystem is in excluded list
     if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then
-        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )  # append values to an array to sort the array before print out
-        [[ ${#mounted} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${#mounted}  # get max length for first column
+        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
+        [[ ${#mounted} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${#mounted}
     fi
 
 done <<< "$(df -h | tail -n +2)"  # tail for skipping header
@@ -141,7 +142,7 @@ SORTED_FREE_WIDTH=0
 SORTED_USAGE_WIDTH=0
 
 # correct width and set direction symbol
-if [ -n "${SORTKEY}" ]; then
+if [ -n "${SORTKEY=free}" ]; then
     case $SORTKEY in
         mounted|m)
         SORTED_BY=1
@@ -177,15 +178,15 @@ if [ -n "${SORTKEY}" ]; then
         printf "sort key '$SORTKEY' does not exists!\n"
         ;;
     esac
-    [[ ! ${SORT_ERR} ]] && readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
+    readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)
 fi
 
-# title
+# print title
 printf "%-$(( ${MOUNTED_LEN} + ${SORTED_MOUNTED_WIDTH} ))s%$(( ${SIZE_WIDTH} + ${SORTED_SIZE_WIDTH} ))s%$(( ${USED_WIDTH} + ${SORTED_USED_WIDTH} ))s%$(( ${FREE_WIDTH} + ${SORTED_FREE_WIDTH} ))s%$(( ${USAGE_WIDTH} + ${SORTED_USAGE_WIDTH} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
 
 # print disk information
 for line in "${diskinfo[@]}";do
-    IFS=' ' read -r -a info <<< "${line}"  # split line
+    IFS=' ' read -r -a info <<< "${line}"
     
     mounted="${info[0]}"
     size="${info[1]}"
