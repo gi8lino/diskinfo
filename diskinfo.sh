@@ -180,6 +180,8 @@ if [ -n "${SORTKEY}" ]; then
         *)
         SORT_ERR=true
         printf "sort key '$SORTKEY' does not exists!\n"
+        ShowHelp
+
         ;;
     esac
     IFS=' '
