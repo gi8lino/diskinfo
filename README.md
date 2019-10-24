@@ -1,7 +1,6 @@
 ## description
 Show diskinfo (df -h) with a progressbar for disk usage.<br>
-The progressbar will be round up or down the progress to the next 5 percent.<br>
-The disk usage in percent next to the progressbar will not be rounded.<br>
+The progressbar will be round up or down the progress to the next 5 percent. The disk usage in percent next to the progressbar will not be rounded.<br>
 If the screen resolution ist less than 80, the progressbar width will be cut in halfe!
 
 ### optional parameters:
