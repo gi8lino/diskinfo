@@ -32,7 +32,7 @@ reload bash: `. ~/.bashrc`
 type in console: `di`<br>
 result:<br>
 ```
-mounted on↑                size    used    free    usage                         filesystem
+mounted on↑                size   used    free    usage                         filesystem
 /                          20G    1.8G     19G    [##------------------]  9%    /dev/mapper/centos-root
 /boot                    1014M    198M    817M    [####----------------] 20%    /dev/sdd2
 /boot/efi                 200M    9.8M    191M    [#-------------------]  5%    /dev/sdd1
