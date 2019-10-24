@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="2.0.1"
+VERSION="2.0.2"
 
 function ShowUsage {
     local _percent=$1
@@ -137,6 +137,7 @@ sort_size_correction=0
 sort_used_correction=0
 sort_free_correction=0
 sort_usage_correction=0
+sort_filesystem_correction=0
 
 # set header space distance and set direction symbol
 if [ -n "${SORTKEY}" ]; then
@@ -148,22 +149,27 @@ if [ -n "${SORTKEY}" ]; then
         ;;
         size|s)
         SORTED_BY="2 -h"
-        sort_size_correction=2
+        sort_size_correction=3
+        sort_used_correction=-1
+        sort_usage_correction=-1
         SIZE_SORT="$SORT_DIRECTION"
         ;;
         used|ud)
         SORTED_BY="3 -h"
-        sort_used_correction=2
+        sort_used_correction=3
+        sort_free_correction=-1
         USED_SORT="$SORT_DIRECTION"
         ;;
         free|f)
         SORTED_BY="4 -h"
         sort_free_correction=3
+        sort_usage_correction=-1
         FREE_SORT="$SORT_DIRECTION"
         ;;
         usage|ug)
         SORTED_BY="6 -h"
 	    sort_usage_correction=3
+	    sort_filesystem_correction=-1
         USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
@@ -179,7 +185,7 @@ if [ -n "${SORTKEY}" ]; then
     readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)  # sort array according sort selection
 fi
 # print title
-printf "%-$(( ${MOUNTED_LEN} + ${sort_mounted_correction} ))s%$(( ${SIZE_WIDTH} + ${sort_size_correction} ))s%$(( ${USED_WIDTH} + ${sort_used_correction} ))s%$(( ${FREE_WIDTH} + ${sort_free_correction} ))s%$(( ${USAGE_WIDTH} + ${sort_usage_correction} ))s%$(( ${BARLENGTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
+printf "%-$(( ${MOUNTED_LEN} + ${sort_mounted_correction} ))s%$(( ${SIZE_WIDTH} + ${sort_size_correction} ))s%$(( ${USED_WIDTH} + ${sort_used_correction} ))s%$(( ${FREE_WIDTH} + ${sort_free_correction} ))s%$(( ${USAGE_WIDTH} + ${sort_usage_correction} ))s%$(( ${BARLENGTH} - 2 ))s%${PERCENT_WIDTH}s%$(( 4 + ${sort_filesystem_correction} ))s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
 
 # print disk information
 for line in "${diskinfo[@]}";do
