@@ -24,6 +24,7 @@ function ShowHelp {
 	           "Show diskinfo (df -h) with a progressbar for disk usage." \
 	       "The progressbar will round up/down the progress to the next 5 percent." \
 	       "The disk usage in percent next to the progressbar will not be rounded." \
+	       "If the screen resolution ist less than 80, the progressbar width will be cut in halfe!" \
 	       "" \
 	       "Optional Parameters:" \
 	       "-e, --excluded-types \"[Type] ...\"   types of filesystem to hide" \
