@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="2.0.2"
+VERSION="2.0.3"
 
 function ShowUsage {
     local _percent=$1
@@ -174,7 +174,7 @@ if [ -n "${SORTKEY}" ]; then
         USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
-        SORTED_BY=8
+        SORTED_BY=7
         FS_SORT="$SORT_DIRECTION"
         ;;
         *)
