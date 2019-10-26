@@ -174,7 +174,7 @@ if [ -n "${SORTKEY}" ]; then
         USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
-        SORTED_BY=7
+        SORTED_BY="7"
         FS_SORT="$SORT_DIRECTION"
         ;;
         *)
