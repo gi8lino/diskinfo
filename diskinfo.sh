@@ -47,18 +47,6 @@ function ShowHelp {
     exit 0
 }
 
-function ShowVersion {
-    printf "$(basename $BASH_SOURCE) version: %s\n" "${VERSION}"
-    exit 0
-}
-
-function ShowUnknownParam {
-    printf "%s\n" \
-	       "$(basename $BASH_SOURCE): invalid option -- '$1'" \
-	       "Try '$(basename $BASH_SOURCE) --help' for more information."
-    exit 1
-}
-
 shopt -s nocasematch  # set string compare to not case senstive
 unset IFS
 
@@ -86,13 +74,17 @@ while [[ $# -gt 0 ]];do
 	    shift  # pass argument
 	    ;;
 	    -v|--version)
-	    ShowVersion
+	    printf "$(basename $BASH_SOURCE) version: %s\n" "${VERSION}"
+	    exit 0
 	    ;;
 	    -h|--help)
 	    ShowHelp
 	    ;;
 	    *)  # unknown option
-	    ShowUnknownParam "$1"
+	    printf "%s\n" \
+	       "$(basename $BASH_SOURCE): invalid option -- '$1'" \
+	       "Try '$(basename $BASH_SOURCE) --help' for more information."
+    exit 1
 	    ;;
     esac  # end case
 done
