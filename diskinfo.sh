@@ -136,7 +136,7 @@ sort_filesystem_correction=0
 if [ -n "${SORTKEY}" ]; then
     case $SORTKEY in
         mounted|m)
-        SORTED_BY=1
+        SORTED_BY="1"
         sort_mounted_correction=2
         MOUNTED_SORT="$SORT_DIRECTION"
         ;;
