@@ -108,7 +108,7 @@ fi
 
 declare -a diskinfo
 MOUNTED_LEN=0
-# output disk usage
+# collect disk usage
 while IFS=' ', read -ra input; do
     filesystem="${input[0]}"
     size="${input[1]}"
