@@ -24,7 +24,7 @@ function ShowHelp {
 	           "Show diskinfo (df -h) with a progressbar for disk usage." \
 	       "The progressbar will round up/down the progress to the next 5 percent." \
 	       "The disk usage in percent next to the progressbar will not be rounded." \
-	       "If the screen resolution ist less than 80, the progressbar width will be cut in halfe!" \
+	       "If the screen resolution ist less than 80, the progressbar width will be set to 10!" \
 	       "" \
 	       "Optional Parameters:" \
 	       "-e, --excluded-types \"[Type] ...\"   types of filesystem to hide" \
@@ -90,7 +90,7 @@ while [[ $# -gt 0 ]];do
 done
 
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
-[[  $(tput cols) -le 80 ]] && BARLENGTH=$(( ${BARLENGTH} / 2 ))
+[[  $(tput cols) -le 80 ]] && BARLENGTH=10  # If the screen resolution ist less than 80, the progressbar width will be set to 10!
 
 if [ -z "${REVERSE}" ]; then
     SORT_DIRECTION="↑"
