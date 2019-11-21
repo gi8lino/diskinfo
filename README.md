@@ -4,12 +4,12 @@ The progressbar will be round up or down the progress to the next 5 percent. The
 If the screen resolution ist less than 80, the progressbar width will be set to 10!
 
 ### optional parameters:
-* `-e, --excluded-types` - types of filesystem to hide. List of strings, separatet by a space. example: `-e "shm overlay tmpfs devtmpfs"`
-* `-b, --bar-length` - length of the progressbar. default: 20. Example: [#######-------------] 33%
-* `-s, --sort` - ascending sort by column (default: mounted). possible values: mounted|size|used|free|usage|filesystem
-* `-r, --reverse` - sort columns descending
-* `-h, --help` - display help and exit
-* `-v, --version` - output version information and exit
+* `-e|--excluded-types` - types of filesystem to hide. List of strings, separatet by a space. example: `-e "shm overlay tmpfs devtmpfs"`
+* `-b|--bar-length` - length of the progressbar. default: 20. Example: [#######-------------] 33%
+* `-s|--sort` - ascending sort by column (default: mounted). possible values: mounted|size|used|free|usage|filesystem
+* `-r|--reverse` - sort columns descending
+* `-h|--help` - display help and exit
+* `-v|--version` - output version information and exit
 
 \* *abbreviation:*<br>
    *mounted: m*<br>
