@@ -90,7 +90,9 @@ while [[ $# -gt 0 ]];do
 done
 
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
-[[  $(tput cols) -le 80 ]] && BARLENGTH=10  # If the screen resolution ist less than 80, the progressbar width will be set to 10!
+if [ -x "$(command -v tput)" ]; then  # check if tput exists
+    [[  $(tput cols) -le 80 ]] && BARLENGTH=10  # If the screen resolution ist less than 80, the progressbar width will be set to 10!
+fi
 
 if [ -z "${REVERSE}" ]; then
     SORT_DIRECTION="↑"
