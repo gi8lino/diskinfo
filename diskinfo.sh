@@ -42,8 +42,9 @@ function ShowHelp {
 	       "" \
 	       "*abbreviations:" \
 	       " mounted: m, size: s, used: ud, free: f, usage: ug, filesystem: fs" \
-           "" \
-	       "created by gi8lino (2019)"
+               "" \
+	       "created by gi8lino (2019)" \
+	       "https://github.com/gi8lino/diskinfo"
     exit 0
 }
 
