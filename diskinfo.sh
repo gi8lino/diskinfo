@@ -19,7 +19,7 @@ function ShowUsage {
 
 function ShowHelp {
     printf "%s\n" \
-	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT]] | [-s|--sort mounted|size|used|free|usage|filesystem] | [-r|--reverse] | [-h|--help] | [-v|--version]" \
+	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT] | [-s|--sort mounted|size|used|free|usage|filesystem] | [-r|--reverse] | [-h|--help] | [-v|--version]" \
 	       	       "" \
 	           "Show diskinfo (df -h) with a progressbar for disk usage." \
 	       "The progressbar will round up/down the progress to the next 5 percent." \
