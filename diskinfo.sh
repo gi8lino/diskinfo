@@ -147,24 +147,24 @@ if [ -n "${SORTKEY}" ]; then
         SORTED_BY="2 -h"
         sort_size_correction=3
         sort_free_correction=-1
-	SIZE_SORT="$SORT_DIRECTION"
+	    SIZE_SORT="$SORT_DIRECTION"
         ;;
         used|ud)
         SORTED_BY="3 -h"
         sort_used_correction=3
         sort_free_correction=-1
-	USED_SORT="$SORT_DIRECTION"
+	    USED_SORT="$SORT_DIRECTION"
         ;;
         free|f)
         SORTED_BY="4 -h"
         sort_free_correction=3
         sort_usage_correction=-1
-	FREE_SORT="$SORT_DIRECTION"
+	    FREE_SORT="$SORT_DIRECTION"
         ;;
         usage|ug)
         SORTED_BY="6 -h"
         sort_usage_correction=3
-	sort_filesystem_correction=-1
+	    sort_filesystem_correction=-1
         USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
