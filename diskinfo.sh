@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="2.0.5"
+VERSION="2.0.6"
 
 function ShowUsage {
     local _percent=$1
@@ -18,33 +18,42 @@ function ShowUsage {
 }
 
 function ShowHelp {
-    printf "%s\n" \
-	       "Usage: $(basename $BASH_SOURCE) [-e|--excluded-types \"TYPE ...\"] [-b|--bar-length INT] | [-s|--sort mounted|size|used|free|usage|filesystem] | [-r|--reverse] | [-h|--help] | [-v|--version]" \
-	       	       "" \
-	           "Show diskinfo (df -h) with a progressbar for disk usage." \
-	       "The progressbar will round up/down the progress to the next 5 percent." \
-	       "The disk usage in percent next to the progressbar will not be rounded." \
-	       "If the screen resolution ist less than 80, the progressbar width will be set to 10!" \
-	       "" \
-	       "Optional Parameters:" \
-	       "-e, --excluded-types \"[Type] ...\"   types of filesystem to hide" \
-	       "                                    list of strings, separatet by a space (not case sensitive)" \
-	       "                                    example: -e \"shm overlay tmpfs devtmpfs\"" \
-	       "-b, --bar-length [INT]              length of progressbar (default: 20)" \
-	       "                                    example: -b 30" \
-	       "                                    result: $(ShowUsage $(( ( RANDOM % 100 ) + 1 )) 30)" \
-	       "-s, --sort                          ascending sort by column (default: mounted)" \
-	       "                                    possible values: mounted|size|used|free|usage|filesystem *" \
-	       "                                    example: -s mounted" \
-	       "-r, --reverse                       sort columns descending" \
-	       "-h, --help                          display this help and exit" \
-	       "-v, --version                       output version information and exit" \
-	       "" \
-	       "*abbreviations:" \
-	       " mounted: m, size: s, used: ud, free: f, usage: ug, filesystem: fs" \
-               "" \
-	       "created by gi8lino (2019)" \
-	       "https://github.com/gi8lino/diskinfo"
+    printf "
+Usage: $(basename diskinfo.sh) [-e|--excluded-types \"TYPE ...\"]
+                               [-b|--bar-length INT]
+                               [-s|--sort mounted|size|used|free|usage|filesystem]
+                               [-r|--reverse]
+                               | [-h|--help] | [-v|--version]
+                                
+Show diskinfo (df -h) with a progressbar for disk usage.
+The progressbar will round up/down the progress to the next 5 percent.
+The disk usage in percent next to the progressbar will not be rounded.
+If the screen resolution ist less than 80, the progressbar width will be set to 10!
+
+Optional Parameters:
+-e, --excluded-types \"[Type] ...\"   types of filesystem to hide
+                                    list of strings, separatet by a space (not case sensitive)
+                                    example: -e \"shm overlay tmpfs devtmpfs\"
+-b, --bar-length [INT]              length of progressbar (default: 20)
+                                    example: -b 30
+                                    result: $(ShowUsage $(( ( RANDOM % 100 ) + 1 )) 30)
+-s, --sort                          ascending sort by column (default: mounted)
+                                    possible values: mounted|size|used|free|usage|filesystem *
+                                    example: -s mounted
+-r, --reverse                       sort columns descending
+-h, --help                          display this help and exit
+-v, --version                       output version information and exit
+
+*abbreviations:
+ - mounted: m
+ - size: s
+ - used: ud
+ - free: f
+ - usage: ug
+ - filesystem: fs
+
+created by gi8lino (2019)
+https://github.com/gi8lino/diskinfo\n\n"
     exit 0
 }
 
@@ -95,11 +104,9 @@ if [ -x "$(command -v tput)" ]; then  # check if tput exists
     [[  $(tput cols) -le 80 ]] && BARLENGTH=10  # If the screen resolution ist less than 80, the progressbar width will be set to 10!
 fi
 
-if [ -z "${REVERSE}" ]; then
-    SORT_DIRECTION="↑"
-else    
+[ -z "${REVERSE}" ] && \
+    SORT_DIRECTION="↑" || \
     SORT_DIRECTION="↓"
-fi
 
 declare -a diskinfo
 MOUNTED_LEN=15
@@ -112,7 +119,7 @@ while IFS=' ', read -ra input; do
     use="${input[4]}"
     mounted="${input[5]}"
 
-    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} " ]];then  # check if filesystem is in excluded list
+    if [[ ! " ${EXCLUDES[@]} " =~ *"${filesystem}"* ]];then  # check if filesystem is in excluded list
         diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
         current_mounted_len=${#mounted}
         [[ ${current_mounted_len} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${current_mounted_len}
