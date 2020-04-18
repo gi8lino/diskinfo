@@ -119,7 +119,7 @@ while IFS=' ', read -ra input; do
     use="${input[4]}"
     mounted="${input[5]}"
 
-    if [[ ! " ${EXCLUDES[@]} " =~ *"${filesystem}"* ]];then  # check if filesystem is in excluded list
+    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} "  ]];then  # check if filesystem is in excluded list
         diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
         current_mounted_len=${#mounted}
         [[ ${current_mounted_len} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${current_mounted_len}
