@@ -2,14 +2,14 @@
 
 VERSION="v1.0.8"
 
-function ShowUsage {
+ShowUsage() {
     local _percent=$1
     local _barlength=$2
   
     ((_rounded = (${_percent}+2)/5, _rounded *= 5))  # round to the next five percent
     let _used=(_barlength*_rounded/100)  # used in relation to bar length
     let _free=(_barlength-_used)  # rest
-    
+       
     # progressbar string lengths
     local _fill=$(printf "%${_used}s")
     local _empty=$(printf "%${_free}s")
@@ -17,7 +17,7 @@ function ShowUsage {
     printf "[${_fill// /#}${_empty// /-}]"  # show progressbar: [########------------]
 }
 
-function ShowHelp {
+ShowHelp() {
     printf "
 Usage: diskinfo.sh [-e|--exclude-types \"TYPE ...\"]
                    [-b|--bar-length INT]
@@ -59,11 +59,10 @@ https://github.com/gi8lino/diskinfo\n\n"
     exit 0
 }
 
-shopt -s nocasematch  # set string compare to not case senstive
 unset IFS
 
 # read start parameter
-while [[ $# -gt 0 ]];do
+while [ $# -gt 0 ]; do
     key="$1"
     case $key in
 	    -e|--exclude-types)
@@ -101,10 +100,10 @@ while [[ $# -gt 0 ]];do
     esac  # end case
 done
 
-[[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
+[ -z "${BARLENGTH##*[!0-9]*}" ] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
 
 [ -x "$(command -v tput)" ] && \
-    [[ $(tput cols) -le 80 ]] && \
+    [ $(tput cols) -le 80 ] && \
     BARLENGTH=10  # If the screen resolution ist less than 80, the progressbar width will be set to 10!
 
 
@@ -120,7 +119,7 @@ while IFS=' ', read -ra input; do
     size="${input[1]}"
     used="${input[2]}"
     avail="${input[3]}"
-    use="${input[4]%\%}"  # stip %
+    use="${input[4]%\%}"  # strip %
     mounted="${input[5]}"
 
     for entry in $EXCLUDES; do
@@ -135,7 +134,6 @@ while IFS=' ', read -ra input; do
             MOUNTED_LEN=${current_mounted_len}
     fi
     unset exclude
-
 done <<< "$(df -h | tail -n +2)"  # tail for skipping header
 
 # default column width
