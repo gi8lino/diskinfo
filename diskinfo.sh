@@ -120,7 +120,7 @@ while IFS=' ', read -ra input; do
     size="${input[1]}"
     used="${input[2]}"
     avail="${input[3]}"
-    use="${input[4]}"
+    use="${input[4]%\%}"  # stip %
     mounted="${input[5]}"
 
     for entry in $EXCLUDES; do
@@ -129,7 +129,7 @@ while IFS=' ', read -ra input; do
             break
     done
     if [ ! -n "$exclude" ]; then
-        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use::-1} "\%" ${filesystem}" )
+        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use} ${BARLENGTH}) ${use} "\%" ${filesystem}" )
         current_mounted_len=${#mounted}
         [[ ${current_mounted_len} -gt  $MOUNTED_LEN ]] && \
             MOUNTED_LEN=${current_mounted_len}
@@ -152,6 +152,7 @@ sort_used_correction=0
 sort_free_correction=0
 sort_usage_correction=0
 sort_filesystem_correction=0
+
 # set header space distance and set direction symbol
 if [ -n "${SORTKEY}" ]; then
     case $SORTKEY in
@@ -215,7 +216,6 @@ printf $format "mounted on${MOUNTED_SORT}" \
                "free${FREE_SORT}" \
                "usage${USAGE_SORT}" \
                "filesystem${FS_SORT}"
-
 
 format="\
 %-${MOUNTED_LEN}s\
