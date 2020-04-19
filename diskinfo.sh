@@ -120,18 +120,19 @@ while IFS=' ', read -ra input; do
     mounted="${input[5]}"
 
     for entry in $EXCLUDES; do
-        if [[ $filesystem = ${entry} ]]; then
+        if [[ " $filesystem " =~ ${entry} ]]; then
             exclude=true
             break
         fi
     done
 
-    if [[ $exclude != true ]]; then
+    if [ ! -n "$exclude" ]; then
         diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
         current_mounted_len=${#mounted}
         [[ ${current_mounted_len} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${current_mounted_len}
-        exclude=false
     fi
+    unset exclude
+
 done <<< "$(df -h | tail -n +2)"  # tail for skipping header
 
 # default column width
