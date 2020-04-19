@@ -34,7 +34,8 @@ If the screen resolution ist less than 80, the progressbar width will be set to 
 Optional Parameters:
 -e, --exclude-types \"[Type] ...\"    types of filesystem to hide
                                     list of strings, separatet by a space (not case sensitive)
-                                    example: -e \"shm overlay tmpfs devtmpfs\"
+                                    can contain wildcards (*)
+                                    example: -e \"shm overlay tmpfs devtmpfs /dev/loop*\"
 -b, --bar-length [INT]              length of progressbar (default: 20)
                                     example: -b 30
                                     result: $(ShowUsage $(( ( RANDOM % 100 ) + 1 )) 30)
