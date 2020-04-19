@@ -125,9 +125,8 @@ while IFS=' ', read -ra input; do
             exclude=true && \
             break
     done
-
     if [ ! -n "$exclude" ]; then
-        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
+        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use::-1} "\%" ${filesystem}" )
         current_mounted_len=${#mounted}
         [[ ${current_mounted_len} -gt  $MOUNTED_LEN ]] && \
             MOUNTED_LEN=${current_mounted_len}
@@ -150,7 +149,6 @@ sort_used_correction=0
 sort_free_correction=0
 sort_usage_correction=0
 sort_filesystem_correction=0
-
 # set header space distance and set direction symbol
 if [ -n "${SORTKEY}" ]; then
     case $SORTKEY in
@@ -162,7 +160,7 @@ if [ -n "${SORTKEY}" ]; then
         size|s)
         SORTED_BY="2 -h"
         sort_size_correction=3
-        sort_free_correction=-1
+        sort_used_correction=-1
 	    SIZE_SORT="$SORT_DIRECTION"
         ;;
         used|ud)
@@ -180,7 +178,7 @@ if [ -n "${SORTKEY}" ]; then
         usage|ug)
         SORTED_BY="6 -h"
         sort_usage_correction=3
-	    sort_filesystem_correction=-1
+	    sort_filesystem_correction=2
         USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
@@ -196,54 +194,36 @@ if [ -n "${SORTKEY}" ]; then
     IFS=' '
     readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)  # sort array according sort selection
 fi
+
 # print title
-printf "%-$(( ${MOUNTED_LEN} + ${sort_mounted_correction} ))s
-        %$(( ${SIZE_WIDTH} + ${sort_size_correction} ))s
-        %$(( ${USED_WIDTH} + ${sort_used_correction} ))s
-        %$(( ${FREE_WIDTH} + ${sort_free_correction} ))s
-        %$(( ${USAGE_WIDTH} + ${sort_usage_correction} ))s
-        %$(( ${BARLENGTH} - 2 ))s
-        %${PERCENT_WIDTH}s
-        %$(( 3 + ${sort_filesystem_correction} ))s
-        %s \n" \
-            "mounted on${MOUNTED_SORT}" \
-            "size${SIZE_SORT}" \
-            "used${USED_SORT}" \
-            "free${FREE_SORT}" \
-            "usage${USAGE_SORT}" \
-            "" \
-            "" \
-            "" \
-            "filesystem${FS_SORT}"
+format="\
+%-$(( ${MOUNTED_LEN} + ${sort_mounted_correction} ))s\
+%$(( ${SIZE_WIDTH} + ${sort_size_correction} ))s\
+%$(( ${USED_WIDTH} + ${sort_used_correction} ))s\
+%$(( ${FREE_WIDTH} + ${sort_free_correction} ))s\
+%$(( ${USAGE_WIDTH} + ${sort_usage_correction} ))s\
+%$(( ${BARLENGTH} + 16 ))s\
+%$(( 3 + ${sort_filesystem_correction} ))s\
+%s\n"
 
-# print disk information
-for line in "${diskinfo[@]}";do
-    IFS=' ' read -ra info <<< "${line}"  # split line
-    mounted="${info[0]}"
-    size="${info[1]}"
-    used="${info[2]}"
-    free="${info[3]}"
-    bar="${info[4]}"
-    percent="${info[5]}"
-    filesystem="${info[6]}"
+printf $format "mounted on${MOUNTED_SORT}" \
+               "size${SIZE_SORT}" \
+               "used${USED_SORT}" \
+               "free${FREE_SORT}" \
+               "usage${USAGE_SORT}" \
+               "filesystem${FS_SORT}"
 
-    # print entry
-    printf "%-${MOUNTED_LEN}s
-            %${SIZE_WIDTH}s
-            %${USED_WIDTH}s
-            %${FREE_WIDTH}s
-            %$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s
-            %${PERCENT_WIDTH}s
-            %4s%s \n" \
-                ${mounted} \
-                ${size} \
-                ${used} \
-                ${free} \
-                ${bar} \
-                ${percent} \
-                "" \
-                ${filesystem}
 
-done <<< "${diskinfo[@]}"
+format="\
+%-${MOUNTED_LEN}s\
+%${SIZE_WIDTH}s\
+%${USED_WIDTH}s\
+%${FREE_WIDTH}s\
+%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s\
+%${PERCENT_WIDTH}s\
+%-4s\
+%s"
+
+printf $format ${diskinfo[@]}
 
 exit 0
