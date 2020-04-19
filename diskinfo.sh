@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="v2.0.7"
+VERSION="v1.0.8"
 
 function ShowUsage {
     local _percent=$1
@@ -19,11 +19,12 @@ function ShowUsage {
 
 function ShowHelp {
     printf "
-Usage: $(basename diskinfo.sh) [-e|--excluded-types \"TYPE ...\"]
-                               [-b|--bar-length INT]
-                               [-s|--sort mounted|size|used|free|usage|filesystem]
-                               [-r|--reverse]
-                               | [-h|--help] | [-v|--version]
+Usage: diskinfo.sh [-e|--exclude-types \"TYPE ...\"]
+                   [-b|--bar-length INT]
+                   [-s|--sort mounted|size|used|free|usage|filesystem]
+                   [-r|--reverse]
+                   | [-h|--help]
+                   | [-v|--version]
                                 
 Show diskinfo (df -h) with a progressbar for disk usage.
 The progressbar will round up/down the progress to the next 5 percent.
@@ -31,9 +32,10 @@ The disk usage in percent next to the progressbar will not be rounded.
 If the screen resolution ist less than 80, the progressbar width will be set to 10!
 
 Optional Parameters:
--e, --excluded-types \"[Type] ...\"   types of filesystem to hide
+-e, --exclude-types \"[Type] ...\"    types of filesystem to hide
                                     list of strings, separatet by a space (not case sensitive)
-                                    example: -e \"shm overlay tmpfs devtmpfs\"
+                                    can contain wildcards (*)
+                                    example: -e \"shm overlay tmpfs devtmpfs /dev/loop*\"
 -b, --bar-length [INT]              length of progressbar (default: 20)
                                     example: -b 30
                                     result: $(ShowUsage $(( ( RANDOM % 100 ) + 1 )) 30)
@@ -52,7 +54,7 @@ Optional Parameters:
  - usage: ug
  - filesystem: fs
 
-created by gi8lino (2019)
+created by gi8lino (2020)
 https://github.com/gi8lino/diskinfo\n\n"
     exit 0
 }
@@ -64,7 +66,7 @@ unset IFS
 while [[ $# -gt 0 ]];do
     key="$1"
     case $key in
-	    -e|--excluded-types)
+	    -e|--exclude-types)
 	    EXCLUDES="$2"
 	    shift  # pass argument
 	    shift  # pass value
@@ -100,9 +102,11 @@ while [[ $# -gt 0 ]];do
 done
 
 [[ ! ${BARLENGTH} =~ ^[0-9]+$ ]] && BARLENGTH=20  # if barlength value is not set or not a number, set barlength to 20
-if [ -x "$(command -v tput)" ]; then  # check if tput exists
-    [[  $(tput cols) -le 80 ]] && BARLENGTH=10  # If the screen resolution ist less than 80, the progressbar width will be set to 10!
-fi
+
+[ -x "$(command -v tput)" ] && \
+    [[ $(tput cols) -le 80 ]] && \
+    BARLENGTH=10  # If the screen resolution ist less than 80, the progressbar width will be set to 10!
+
 
 [ -z "${REVERSE}" ] && \
     SORT_DIRECTION="↑" || \
@@ -120,18 +124,18 @@ while IFS=' ', read -ra input; do
     mounted="${input[5]}"
 
     for entry in $EXCLUDES; do
-        if [[ $filesystem = ${entry} ]]; then
-            exclude=true
+        [[ " $filesystem " =~ ${entry} ]] && \
+            exclude=true && \
             break
-        fi
     done
-
-    if [[ $exclude != true ]]; then
-        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
+    if [ ! -n "$exclude" ]; then
+        diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use::-1} "\%" ${filesystem}" )
         current_mounted_len=${#mounted}
-        [[ ${current_mounted_len} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${current_mounted_len}
-        exclude=false
+        [[ ${current_mounted_len} -gt  $MOUNTED_LEN ]] && \
+            MOUNTED_LEN=${current_mounted_len}
     fi
+    unset exclude
+
 done <<< "$(df -h | tail -n +2)"  # tail for skipping header
 
 # default column width
@@ -148,7 +152,6 @@ sort_used_correction=0
 sort_free_correction=0
 sort_usage_correction=0
 sort_filesystem_correction=0
-
 # set header space distance and set direction symbol
 if [ -n "${SORTKEY}" ]; then
     case $SORTKEY in
@@ -160,7 +163,7 @@ if [ -n "${SORTKEY}" ]; then
         size|s)
         SORTED_BY="2 -h"
         sort_size_correction=3
-        sort_free_correction=-1
+        sort_used_correction=-1
 	    SIZE_SORT="$SORT_DIRECTION"
         ;;
         used|ud)
@@ -178,7 +181,7 @@ if [ -n "${SORTKEY}" ]; then
         usage|ug)
         SORTED_BY="6 -h"
         sort_usage_correction=3
-	    sort_filesystem_correction=-1
+	    sort_filesystem_correction=2
         USAGE_SORT="$SORT_DIRECTION"
         ;;
         filesystem|fs)
@@ -194,21 +197,36 @@ if [ -n "${SORTKEY}" ]; then
     IFS=' '
     readarray diskinfo <<< $(printf '%s\n' "${diskinfo[@]}" | sort -k$SORTED_BY $REVERSE)  # sort array according sort selection
 fi
+
 # print title
-printf "%-$(( ${MOUNTED_LEN} + ${sort_mounted_correction} ))s%$(( ${SIZE_WIDTH} + ${sort_size_correction} ))s%$(( ${USED_WIDTH} + ${sort_used_correction} ))s%$(( ${FREE_WIDTH} + ${sort_free_correction} ))s%$(( ${USAGE_WIDTH} + ${sort_usage_correction} ))s%$(( ${BARLENGTH} - 2 ))s%${PERCENT_WIDTH}s%$(( 3 + ${sort_filesystem_correction} ))s%s \n" "mounted on${MOUNTED_SORT}" "size${SIZE_SORT}" "used${USED_SORT}" "free${FREE_SORT}" "usage${USAGE_SORT}" "" "" "" "filesystem${FS_SORT}"
+format="\
+%-$(( ${MOUNTED_LEN} + ${sort_mounted_correction} ))s\
+%$(( ${SIZE_WIDTH} + ${sort_size_correction} ))s\
+%$(( ${USED_WIDTH} + ${sort_used_correction} ))s\
+%$(( ${FREE_WIDTH} + ${sort_free_correction} ))s\
+%$(( ${USAGE_WIDTH} + ${sort_usage_correction} ))s\
+%$(( ${BARLENGTH} + 16 ))s\
+%$(( 3 + ${sort_filesystem_correction} ))s\
+%s\n"
 
-# print disk information
-for line in "${diskinfo[@]}";do
-    IFS=' ' read -ra info <<< "${line}"  # split line
-    mounted="${info[0]}"
-    size="${info[1]}"
-    used="${info[2]}"
-    free="${info[3]}"
-    bar="${info[4]}"
-    percent="${info[5]}"
-    filesystem="${info[6]}"
+printf $format "mounted on${MOUNTED_SORT}" \
+               "size${SIZE_SORT}" \
+               "used${USED_SORT}" \
+               "free${FREE_SORT}" \
+               "usage${USAGE_SORT}" \
+               "filesystem${FS_SORT}"
 
-    printf "%-${MOUNTED_LEN}s%${SIZE_WIDTH}s%${USED_WIDTH}s%${FREE_WIDTH}s%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s%${PERCENT_WIDTH}s%4s%s \n"  ${mounted} ${size} ${used} ${free} ${bar} ${percent} "" ${filesystem}
-done <<< "${diskinfo[@]}"
+
+format="\
+%-${MOUNTED_LEN}s\
+%${SIZE_WIDTH}s\
+%${USED_WIDTH}s\
+%${FREE_WIDTH}s\
+%$(( ${BARLENGTH} + ${USAGE_WIDTH} - 3 ))s\
+%${PERCENT_WIDTH}s\
+%-4s\
+%s"
+
+printf $format ${diskinfo[@]}
 
 exit 0
