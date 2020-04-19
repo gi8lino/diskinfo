@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="v2.0.7"
+VERSION="v2.0.8"
 
 function ShowUsage {
     local _percent=$1
