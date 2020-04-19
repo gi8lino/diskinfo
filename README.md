@@ -8,7 +8,7 @@ If the screen resolution ist less than 80, the progressbar width will be set to 
 
 ### optional parameters:
 
-* `-e|--excluded-types` - types of filesystem to hide. List of strings, separatet by a space. you can use wildcards `*`. example: `-e "shm overlay tmpfs devtmpfs"`
+* `-e|--exclude-types` - types of filesystem to hide. List of strings, separatet by a space. you can use wildcards `*`. example: `-e "shm overlay tmpfs devtmpfs"`
 * `-b|--bar-length` - length of the progressbar. default: 20. Example: [#######-------------] 33%
 * `-s|--sort` - ascending sort by column (default: mounted). possible values: mounted|size|used|free|usage|filesystem
 * `-r|--reverse` - sort columns descending
@@ -25,7 +25,14 @@ If the screen resolution ist less than 80, the progressbar width will be set to 
 
 ## usage
 
-`diskinfo.sh [-e|--excluded-types "TYPE ..."] [-b|--bar-length INT] | [-s|--sort mounted|size|used|free|usage|filesystem] | [-r|--reverse] | [-h|--help] | [-v|--version]`
+```bash
+diskinfo.sh [-e|--exclude-types "TYPE ..."]
+            [-b|--bar-length INT]
+            [-s|--sort mounted|size|used|free|usage|filesystem]
+            [-r|--reverse]
+            | [-h|--help]
+            | [-v|--version]`
+```
 
 ## alias
 
@@ -34,7 +41,7 @@ open bash: `vi ~/.bashrc`
 set command:
 
 ```bash
-alias di="echo -e 'alias for \033[0;35m/opt/diskinfo/diskinfo.sh --exclude \"shm overlay tmpfs devtmpfs\" \033[0m' && /opt/diskinfo/diskinfo.sh --exclude \"shm overlay tmpfs devtmpfs\""
+alias di="echo -e 'alias for \033[0;35m/opt/diskinfo/diskinfo.sh --exclude-types \"shm overlay tmpfs devtmpfs\" \033[0m' && /opt/diskinfo/diskinfo.sh --exclude-types \"shm overlay tmpfs devtmpfs\""
 ```
 
 reload bash: `. ~/.bashrc`

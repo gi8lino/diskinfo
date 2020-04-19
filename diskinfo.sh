@@ -19,7 +19,7 @@ function ShowUsage {
 
 function ShowHelp {
     printf "
-Usage: $(basename diskinfo.sh) [-e|--excluded-types \"TYPE ...\"]
+Usage: $(basename diskinfo.sh) [-e|--exclude-types \"TYPE ...\"]
                                [-b|--bar-length INT]
                                [-s|--sort mounted|size|used|free|usage|filesystem]
                                [-r|--reverse]
@@ -31,7 +31,7 @@ The disk usage in percent next to the progressbar will not be rounded.
 If the screen resolution ist less than 80, the progressbar width will be set to 10!
 
 Optional Parameters:
--e, --excluded-types \"[Type] ...\"   types of filesystem to hide
+-e, --exclude-types \"[Type] ...\"    types of filesystem to hide
                                     list of strings, separatet by a space (not case sensitive)
                                     example: -e \"shm overlay tmpfs devtmpfs\"
 -b, --bar-length [INT]              length of progressbar (default: 20)
@@ -64,7 +64,7 @@ unset IFS
 while [[ $# -gt 0 ]];do
     key="$1"
     case $key in
-	    -e|--excluded-types)
+	    -e|--exclude-types)
 	    EXCLUDES="$2"
 	    shift  # pass argument
 	    shift  # pass value
