@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="2.0.6"
+VERSION="v2.0.7"
 
 function ShowUsage {
     local _percent=$1
@@ -119,12 +119,19 @@ while IFS=' ', read -ra input; do
     use="${input[4]}"
     mounted="${input[5]}"
 
-    if [[ ! " ${EXCLUDES[@]} " =~ " ${filesystem} "  ]];then  # check if filesystem is in excluded list
+    for entry in $EXCLUDES; do
+        if [[ $filesystem = ${entry} ]]; then
+            exclude=true
+            break
+        fi
+    done
+
+    if [[ $exclude != true ]]; then
         diskinfo+=( "${mounted} ${size} ${used} ${avail} $(ShowUsage ${use::-1} ${BARLENGTH}) ${use} ${filesystem}" )
         current_mounted_len=${#mounted}
         [[ ${current_mounted_len} -gt  $MOUNTED_LEN ]] && MOUNTED_LEN=${current_mounted_len}
+        exclude=false
     fi
-
 done <<< "$(df -h | tail -n +2)"  # tail for skipping header
 
 # default column width
