@@ -46,16 +46,16 @@ Optional Parameters:
 -h, --help                          display this help and exit
 -v, --version                       output version information and exit
 
-*abbreviations:
+*\e[3mabbreviations:
  - mounted: m
  - size: s
  - used: ud
  - free: f
  - usage: ug
  - filesystem: fs
-
+\e[0m
 created by gi8lino (2020)
-https://github.com/gi8lino/diskinfo\n\n"
+https://github.com/gi8lino/diskinfo.git\n\n"
     exit 0
 }
 
